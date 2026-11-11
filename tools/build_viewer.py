@@ -1,4 +1,4 @@
-"""Assemble index.html from the clean tables and the decisions log.
+"""Assemble viewer/index.html from the clean tables and the decisions log.
 Usage: python build_viewer.py --clean <clean_data_OSD> --decisions <DECISIONS_AND_INFERENCES.md> --template <viewer_template.html> --out <index.html>
 No calculations happen here except moving values into a JSON object; calculations in the page are labeled CALCULATED and logged (V1, B1, E1)."""
 import argparse, json, re
@@ -9,7 +9,7 @@ for a in ['clean', 'decisions', 'template', 'out']: ap.add_argument('--' + a, re
 a = ap.parse_args()
 C = a.clean
 st = pd.read_csv(f'{C}/staffing.csv'); en = pd.read_csv(f'{C}/enrollment.csv'); ex = pd.read_csv(f'{C}/f196_expenditures.csv')
-rv = pd.read_csv(f'{C}/f196_revenues.csv'); ca = pd.read_csv(f'{C}/central_admin_measures.csv'); fl = pd.read_csv(f'{C}/position_flows.csv'); df = pd.read_csv(f'{C}/deflator.csv')
+rv = pd.read_csv(f'{C}/f196_revenues.csv'); ca = pd.read_csv(f'{C}/central_admin_measures.csv'); df = pd.read_csv(f'{C}/deflator.csv')
 ys = sorted(st.school_year.unique()); yf = [y for y in sorted(ex.school_year.unique()) if y >= '2015-16']
 order = ['district_administration', 'classified_director_supervisor', 'building_administration', 'teachers', 'other_certificated', 'paraeducators', 'classified_support', 'on_leave']
 D = {'years_s275': ys, 'years_f196': yf, 'category_order': order}
@@ -28,7 +28,8 @@ tmap = pd.read_csv(f'{C}/s275_title_map.csv');
 for t in title: title[t]['category'] = tmap.loc[tmap.duty_title == t, 'viewer_category'].iloc[0]
 D['staffing'] = {'category': cat, 'title': title}
 e = en[(en.measure == 'headcount_annual_avg')]
-D['enrollment'] = {'headcount_annual_avg': {r.school_year: float(r.value) for r in e.itertuples()}}
+f_ = en[(en.measure == 'fte_annual_avg')]
+D['enrollment'] = {'headcount_annual_avg': {r.school_year: float(r.value) for r in e.itertuples()}, 'fte_annual_avg': {r.school_year: float(r.value) for r in f_.itertuples()}}
 D['deflator'] = {r.school_year: float(r.factor_to_ref_year_dollars) for r in df.itertuples()}
 X = {}
 for (gt, g), x in ex.groupby(['group_type', 'group']):
@@ -51,12 +52,6 @@ for r in ca.itertuples():
     if r.measure_id == 'A': pct = str(r.note).replace(' of general fund', ' of GF')
     Cn.setdefault(r.measure_id, {})[r.school_year] = {'dollars': float(r.dollars), 'fte': None if str(r.fte) in ('', 'nan') else float(r.fte), 'people': None if str(r.people) in ('', 'nan') else int(float(r.people)), 'pct': pct}
 D['central'] = Cn
-F = {}
-for r in fl.itertuples():
-    if r.measure in ('person_fte_start', 'person_fte_end'): continue
-    v = '<5' if r.suppressed == 'Y' else (None if str(r.value) == 'nan' else int(float(r.value)))
-    F.setdefault(r.school_year_to, {}).setdefault(r.category, {})[r.measure] = v
-D['flows'] = F
 D['flow_groups'] = ['front_office', 'classroom_teachers', 'paraeducators', 'student_services', 'support_staffing', 'super', 'managers', 'office_tech_prof', 'on_leave']
 
 # --- conventional groupings (G1-G7), nested tiers (G6), community-list check (C4)

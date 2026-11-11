@@ -22,11 +22,11 @@ Raw inputs are left out for three reasons: **privacy** (several contain individu
 
 | Raw input | Why it is not here | Where to find it |
 |---|---|---|
-| OSPI S-275 personnel files, statewide, 2015-16 to 2025-26 | One row per person, with names. Only aggregates (no names, counts under 5 suppressed) are published here. | OSPI, [Personnel Summary Reports](https://ospi.k12.wa.us/index.php/policy-funding/school-apportionment/school-publications/personnel-summary-reports) and the S-275 data files linked from that page. |
-| OSPI F-196 actual revenues and expenditures, 2014-15 to 2024-25 | Large, and already public. | OSPI, [Financial Reporting Summary](https://ospi.k12.wa.us/index.php/policy-funding/school-apportionment/school-publications/financial-reporting-summary). |
+| OSPI S-275 personnel files, statewide, 2015-16 to 2025-26 | One row per person, with names. Only aggregates (no names, counts under 5 suppressed) are published here. | https://ospi.k12.wa.us/safs-data-files |
+| OSPI F-196 actual revenues and expenditures, 2014-15 to 2024-25 | Large, and already public. | https://ospi.k12.wa.us/safs-data-files |
 | District enrollment workbook (2009-10 to 2026-27) | Already public from the district. The cleaned headcounts are in `clean_data_OSD/enrollment.csv`. | Olympia School District enrollment dashboard. |
 | State employee bargaining agreements (WFSE General Government, 2015-17 to 2023-25) and the OFM 2025-27 summary | Already public. The raise percentages and salary-schedule values used are typed into `clean_data_OSD/benchmarks.csv`, each with its source. | Washington Office of Financial Management, labor relations pages; the OFM summary URL is in `SOURCES.md`. |
-| OSPI S-275 handbooks, WMS evaluator handbook, legislative salary schedules, agency head tables | Already public. | URLs in `SOURCES.md`. |
+| OSPI S-275 handbooks, legislative salary schedules, agency head tables | Already public. | URLs in `SOURCES.md`. |
 | Community workbooks ("OSD Admin Data-For Sharing", Knox administration spreadsheets) | Contain individuals' details. Only totals and match counts are used (`community_*.csv`). | Available from their compilers by request. |
 
 Consequence: the page and every cleaned table can be inspected here, and the scripts in `tools/` show exactly how each table was made. To rerun the scripts from scratch you would first download the OSPI, OFM and district files above. The community-workbook comparison tables cannot be rebuilt without the compilers' permission.

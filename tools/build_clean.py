@@ -41,42 +41,6 @@ def staffing(s275, tmap, out):
     t = tidy(recs, list(recs[0].keys())); t.to_csv(f'{out}/staffing.csv', index=False)
     return d
 
-def flows(d, out):
-    # P1-P3: link people across consecutive years; category with most FTE (ties: higher pay) = person-year category
-    g = d.groupby(['school_year', 'person', 'flow_group']).agg(fte=('fte', 'sum'), sal=('total_salary', 'sum')).reset_index()
-    g = g.sort_values(['school_year', 'person', 'fte', 'sal'], ascending=[True, True, False, False])
-    main = g.drop_duplicates(['school_year', 'person'])
-    yrs = sorted(main.school_year.unique()); recs = []; pooled = {}
-    for a, b in zip(yrs[:-1], yrs[1:]):
-        A = main[main.school_year == a].set_index('person'); B = main[main.school_year == b].set_index('person')
-        j = A.join(B, how='outer', lsuffix='_a', rsuffix='_b')
-        j['flow'] = 'stayed'
-        j.loc[j.flow_group_b.isna(), 'flow'] = 'left_list'
-        j.loc[j.flow_group_a.isna(), 'flow'] = 'new_to_list'
-        mv = j.flow_group_a.notna() & j.flow_group_b.notna() & (j.flow_group_a != j.flow_group_b)
-        j.loc[mv, 'flow'] = 'moved'
-        for (ca, cb), n in j[mv].groupby(['flow_group_a', 'flow_group_b']).size().items(): pooled[(ca, cb)] = pooled.get((ca, cb), 0) + n
-        cats = sorted(set(main.flow_group))
-        for c in cats:
-            def cnt(mask): return int(mask.sum())
-            vals = {
-                'start_headcount': cnt(j.flow_group_a == c), 'end_headcount': cnt(j.flow_group_b == c),
-                'stayed': cnt((j.flow == 'stayed') & (j.flow_group_a == c)),
-                'left_list': cnt((j.flow == 'left_list') & (j.flow_group_a == c)),
-                'new_to_list': cnt((j.flow == 'new_to_list') & (j.flow_group_b == c)),
-                'moved_out': cnt((j.flow == 'moved') & (j.flow_group_a == c)),
-                'moved_in': cnt((j.flow == 'moved') & (j.flow_group_b == c)),
-            }
-            fa, fb = j.loc[j.flow_group_a == c, 'fte_a'].sum(), j.loc[j.flow_group_b == c, 'fte_b'].sum()
-            for m, v in vals.items():
-                sup = (0 < v < MIN_N)
-                recs.append(dict(district=DIST, school_year_from=a, school_year_to=b, category=c, measure=m, value='' if sup else v, suppressed='Y' if sup else '', derivation='INFERRED', decision_ids='P1,P2,P3,P4,S10'))
-            recs.append(dict(district=DIST, school_year_from=a, school_year_to=b, category=c, measure='person_fte_start', value=round(fa, 2), suppressed='', derivation='INFERRED', decision_ids='P2'))
-            recs.append(dict(district=DIST, school_year_from=a, school_year_to=b, category=c, measure='person_fte_end', value=round(fb, 2), suppressed='', derivation='INFERRED', decision_ids='P2'))
-    pd.DataFrame(recs).to_csv(f'{out}/position_flows.csv', index=False)
-    pm = pd.DataFrame([dict(from_category=a, to_category=b, moves_pooled_2015_16_to_2025_26=n if n >= MIN_N else '', suppressed='' if n >= MIN_N else 'Y', derivation='INFERRED', decision_ids='P1,P2,P4') for (a, b), n in sorted(pooled.items())])
-    pm.to_csv(f'{out}/position_moves_pooled.csv', index=False)
-
 def enrollment(path, out):
     wb = openpyxl.load_workbook(path, data_only=True)
     rows = []; cur = None
@@ -306,24 +270,9 @@ def community_match(d, knox, out):
     cc['derivation'] = 'CALCULATED'; cc['decision_ids'] = 'C1,C4,G1'
     cc.to_csv(f'{out}/community_list_composition.csv', index=False)
 
-def ratios(st, enr, ex, bench, out):
-    e = enr[enr.measure == 'headcount_annual_avg'].set_index('school_year').value.astype(float)
-    recs = []
-    for r in st[(st.measure == 'fte') & (st.level == 'category')].itertuples():
-        if r.school_year in e.index and r.school_year != '2026-27':
-            recs.append(dict(school_year=r.school_year, measure='fte_per_100_students', category=r.category, value=round(float(r.value) / e[r.school_year] * 100, 3), dollars_basis='', derivation='CALCULATED', decision_ids='S2,E1,E3'))
+def deflator(bench, out):
     cpi = bench[(bench.series == 'seattle_cpi') & (bench.measure == 'index_1982_84=1')].set_index('school_year').value.astype(float)
     ref = '2024-25'   # V4: latest year with actual spending and actual CPI
-    tot = ex.groupby('school_year').amount.sum()
-    for sy, v in tot.items():
-        recs.append(dict(school_year=sy, measure='gf_spending_per_pupil', category='general_fund_total', value=round(v / e[sy], 0), dollars_basis='nominal', derivation='CALCULATED', decision_ids='F1,E1,E3'))
-        recs.append(dict(school_year=sy, measure='gf_spending_per_pupil', category='general_fund_total', value=round(v / e[sy] * cpi[ref] / cpi[sy], 0), dollars_basis=f'{ref}_dollars_seattle_cpi', derivation='CALCULATED', decision_ids='F1,E1,E3,B1,V4'))
-        recs.append(dict(school_year=sy, measure='gf_spending_total', category='general_fund_total', value=round(v * cpi[ref] / cpi[sy], 0), dollars_basis=f'{ref}_dollars_seattle_cpi', derivation='CALCULATED', decision_ids='F1,B1,V4'))
-    for r in st[(st.measure == 'comp_total') & (st.level == 'category')].itertuples():
-        fte = st[(st.measure == 'fte') & (st.level == 'category') & (st.category == r.category) & (st.school_year == r.school_year)].value.astype(float).iloc[0]
-        if r.value != '' and fte > 0:
-            recs.append(dict(school_year=r.school_year, measure='avg_total_comp_per_fte', category=r.category, value=round(float(r.value) / fte, 0), dollars_basis='nominal', derivation='CALCULATED', decision_ids='S2,S3,P4'))
-    pd.DataFrame(recs).to_csv(f'{out}/ratios.csv', index=False)
     # V4 / B1: price-level factor to reference-year dollars (multiply nominal dollars by factor)
     dfl = pd.DataFrame([dict(school_year=sy, seattle_cpi_index=round(v, 4), factor_to_ref_year_dollars=round(cpi[ref] / v, 5), ref_year=ref, derivation='CALCULATED', decision_ids='B1,B2,V4') for sy, v in cpi.items()])
     dfl.to_csv(f'{out}/deflator.csv', index=False)
@@ -335,13 +284,11 @@ if __name__ == '__main__':
     tmap = pd.read_csv(f'{a.maps}/s275_title_map.csv'); cmap = pd.read_csv(f'{a.maps}/f196_code_map.csv', dtype=str)
     bench = pd.read_csv(f'{a.maps}/benchmarks.csv')
     d = staffing(a.s275, tmap, a.out)
-    flows(d, a.out)
     enr = enrollment(a.enroll, a.out)
     ex, tot = finance(a.f196, cmap, a.out)
     central_admin(d, ex, a.knox, a.out)
     d = grouped(d, a.out)
     MAPFILE = f'{a.maps}/s275_title_map.csv'
     community_match(d, a.knox, a.out)
-    st = pd.read_csv(f'{a.out}/staffing.csv')
-    ratios(st, enr, ex, bench, a.out)
+    deflator(bench, a.out)
     print('done')

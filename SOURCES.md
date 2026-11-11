@@ -1,26 +1,17 @@
 # Sources
 
-Status: `have` = obtained and used; `cleaned` = in `clean_data_OSD/`; `todo` = not yet obtained. Raw files are not stored in this repository (see README).
+Status: `have` = obtained and used; `cleaned` = in `clean_data_OSD/`. Raw files are not stored in this repository (see README).
 
 | Data | Source | Years | Gives us | Status |
 |---|---|---|---|---|
-| Staff by position, FTE, salary, benefits | OSPI S-275 personnel data and summary reports ([Personnel Summary Reports](https://ospi.k12.wa.us/index.php/policy-funding/school-apportionment/school-publications/personnel-summary-reports); e.g. [2024-25 summary](https://ospi.k12.wa.us/sites/default/files/2025-02/allpersonnelsummaryreport2024-25.pdf)) | 2015-16 to 2025-26 | Headcount/FTE and pay by duty title; all 11 years downloaded (Olympia rows extracted) | have |
-| Duty code definitions | OSPI [S-275 handbook 2026-27](https://ospi.k12.wa.us/sites/default/files/2026-09/s-275_handbook_2026-27.pdf); [duty code appendix](https://ospi.k12.wa.us/sites/default/files/2025-02/appendix_2024-25.docx) | current; check older handbooks for code changes | Category mapping | titles mapped (handbook not reachable; definitions marked verify) |
-| Actual spending and revenue (F-196) | OSPI [Financial Reporting Summary](https://ospi.k12.wa.us/index.php/policy-funding/school-apportionment/school-publications/financial-reporting-summary), statewide Access databases and CSV exports | 2014-15 to 2024-25 | General fund expenditures by program, activity, object; revenues by source | have; Olympia extracted |
-| 10-year F-196 history | Same page, Section One "F-196 Historical Data Detail" (Excel) | 10 years | Cross-check of district tables | todo |
-| Budgets (F-195) | District budget documents (2020-21 to 2026-27) | budget years | Plans only; use for 2025-26 and later where actuals are not out | have |
-| Enrollment | District enrollment dashboard (annual average headcount; see clean_data_OSD/enrollment.csv) | 2009-10 to 2026-27 | Annual average headcount | have |
-| State salary inflation factor (IPD) | Legislature / OSPI budget documents | 2015 to 2026 | Benchmark for school pay growth | cleaned (year alignment to confirm) |
-| State employee general wage increases | Office of Financial Management | 2015 to 2026 | Benchmark | cleaned |
-| Thurston County employee wage increases | County salary schedules or bargaining agreements | 2015 to 2026 | Benchmark | todo |
-| Seattle-area CPI-U | Bureau of Labor Statistics | 2015 to 2026 | Inflation adjustment | cleaned (2026 is a forecast) |
-| Community group spreadsheets | Provided by community members | varies | Their prior pulls; check against OSPI | have; check in progress |
-
-Notes
-- Prefer actuals (F-196) over budgets (F-195) wherever both exist.
-- 2019-20 and 2020-21 summary tables may be grouped by enrollment band or county; confirm district-level rows exist.
-- S-275 is an October snapshot of the school year; record that on the page.
-
+| Staff by position, FTE, salary, benefits | OSPI S-275 person-level personnel data files https://ospi.k12.wa.us/safs-data-files  | 2015-16 to 2025-26 | Headcount/FTE and pay by duty title; all 11 years downloaded (Olympia rows extracted) | cleaned
+| Duty code definitions | OSPI https://ospi.k12.wa.us/sites/default/files/2026-09/s-275_handbook_2026-27.pdf; [duty code appendix](https://ospi.k12.wa.us/sites/default/files/2025-02/appendix_2024-25.docx); https://ospi.k12.wa.us/sites/default/files/2022-12/b113-18attach1.pdf | 2026-27 (applied to all years) and 2018-19 (compared) | Duty title definitions used to map titles to categories (S4, S5) | have
+| Actual spending and revenue (F-196) | OSPI statewide Access databases and CSV exports https://ospi.k12.wa.us/safs-data-files | 2014-15 to 2024-25 | General fund expenditures by program, activity, object; revenues by source | have; Olympia extracted 
+| Enrollment | District enrollment dashboard (annual average headcount; see clean_data_OSD/enrollment.csv) https://osd.wednet.edu/index.php?pageID=smartSiteFeed&psqFeed=true&articleID=82704166 | 2009-10 to 2026-27 | Annual average headcount | have
+| State employee general wage increases | Office of Financial Management https://ofm.wa.gov/wp-content/uploads/2026/05/Legislative_GenWageAdjustments_History.pdf | 2015 to 2026 | Benchmark | cleaned
+| Seattle-area CPI-U | Washington State Economic and Revenue Forecast https://erfc.wa.gov/sites/default/files/2026-10/sep26pub.pdf | 2015 to 2026 | Inflation adjustment | cleaned (2026 is a forecast)
+| District's stated central administration figure (4.88%) | OSD Long-Term Planning FAQs (Oct. 22 FAQ) https://www.osd.wednet.edu/long-term-planning-faqs | year and base not stated | Shown beside our own measures of central administration | have |
+| Community group spreadsheets | Provided by community members. Available upon request - contains staff names | varies | Their prior pulls; check against OSPI | have
 
 ## Pay benchmarks (Nov. 10, 2026)
 - Governor and State Superintendent of Public Instruction salary schedules: https://lawfilesext.leg.wa.gov/biennium/2019-20/Htm/Bills/Session%20Laws/House/2019SALARYSCHEDULE.SL.htm ; https://lawfilesext.leg.wa.gov/biennium/2021-22/Pdf/Bills/Session%20Laws/House/2021SALARYSCHEDULE.SL.pdf ; https://lawfilesext.leg.wa.gov/biennium/2023-24/Pdf/Bills/Session%20Laws/House/SALAR.SL.pdf ; https://salaries.wa.gov/sites/default/files/public/2025%202026%20Final%20Salary%20Schedule.pdf
@@ -30,7 +21,5 @@ Notes
 
 ## State employee pay and community workbook (Nov. 10, 2026)
 - WFSE General Government collective bargaining agreements 2015-17, 2017-19, 2019-21, 2021-23, 2023-25: general wage increases are in the compensation article (s.42.1) and step rules in s.42.9; salary schedules in the appendices.
-- 2025-26 and 2026-27 represented raises (3% July 2025, 2% July 2026): OFM, Summary of Major Elements of 2025-27 Collective Bargaining Agreements, https://ofm.wa.gov/sites/default/files/public/legacy/agencycommunications/FY2025/Summary%20of%20Major%20Elements%20of%202025-27%20Collective%20Bargaining%20Agreements.pdf (agreement text itself not in the folder).
-- WMS Inclusion & Job Value Assessment Evaluator's Handbook v1.6: points-to-band table only (Band 1 437-501, Band 2 560-724, Band 3 618-856, Band 4 995-1187); no dollar ranges.
+- 2025-26 and 2026-27 represented raises (3% July 2025, 2% July 2026): OFM, Summary of Major Elements of 2025-27 Collective Bargaining Agreements, https://ofm.wa.gov/sites/default/files/public/legacy/agencycommunications/FY2025/Summary%20of%20Major%20Elements%20of%202025-27%20Collective%20Bargaining%20Agreements.pdf (agreement text itself not in the folder). Available: https://wfse.org/all-contracts/General-Government-Contracts ; https://ofm.wa.gov/wp-content/uploads/sites/default/files/public/labor/agreements/23-25/wfse_gg.pdf ; https://ofm.wa.gov/wp-content/uploads/sites/default/files/public/labor/agreements/21-23/wfse_gg.pdf ; https://ofm.wa.gov/wp-content/uploads/sites/default/files/public/labor/agreements/19-21/wfse_gg.pdf ; https://ofm.wa.gov/wp-content/uploads/sites/default/files/public/legacy/labor/agreements/17-19/wfse_gg.pdf ; https://ofm.wa.gov/wp-content/uploads/sites/default/files/public/legacy/labor/agreements/15-17/wfse_gg.pdf 
 - Community workbook "OSD Admin Data-For Sharing.xlsx", compiled by Janel Bistrika (2026); credited with the compiler's permission (updated; names removed; compiler contact details in the file are not reproduced here). Decision C6.
-- Not yet obtained: the state's annual employee salary database (fiscal.wa.gov), which could be used to estimate WMS band pay ranges.

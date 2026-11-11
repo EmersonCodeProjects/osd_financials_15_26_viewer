@@ -22,8 +22,6 @@ Each check says what was compared and the result. "Not yet checked" items are li
 | Could 2022-23 locations be carried back to earlier years? | No: 24 of 95 people on the 2020-21 community list were absent from 2022-23 S-275 and 65 were district-coded; carrying back would miss about a quarter |
 
 ## Not yet checked
-- F-196 totals against OSPI's published 10-year historical detail (SOURCES.md, still "todo").
-- Average pay per FTE by category against any outside figure; it is in `ratios.csv` but not shown in the viewer.
-- Person linking across years against the community staff directories (P1, S10).
+- F-196 totals against OSPI's published 10-year historical detail.
 - Whether October enrollment instead of the annual average changes the per-student figures (E1); expected change is about 0.5%.
 - S-275 duty-code definitions for 2015-16 to 2017-18 (no handbook on hand; S5).

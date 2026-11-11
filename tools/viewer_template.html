@@ -63,7 +63,26 @@ h3.s{font-size:.95rem;margin:12px 0 0}
 .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;margin:10px 0}
 .tile{border:1px solid var(--line);border-radius:8px;padding:10px 12px;background:var(--bg)}
 .tile .tl{font-size:.8rem;color:var(--muted)}.tile .tb{font-size:1.7rem;font-weight:700;line-height:1.2;margin:2px 0}.tile .ts{font-size:.8rem;color:var(--muted)}
-.vt .vd{background:#dcefe3;color:#17623a}.vp .vd{background:#fbecc8;color:#7a5600}.vn .vd{background:#e3e8ef;color:#2f4a6b}@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .vt .vd{background:#1d3b2b;color:#9fd9b6}:root:not([data-theme="light"]) .vp .vd{background:#4a3a10;color:#f0d28a}:root:not([data-theme="light"]) .vn .vd{background:#27364a;color:#b4c9e6}}@media (max-width:640px){}</style>
+.vt .vd{background:#dcefe3;color:#17623a}.vp .vd{background:#fbecc8;color:#7a5600}.vn .vd{background:#e3e8ef;color:#2f4a6b}@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .vt .vd{background:#1d3b2b;color:#9fd9b6}:root:not([data-theme="light"]) .vp .vd{background:#4a3a10;color:#f0d28a}:root:not([data-theme="light"]) .vn .vd{background:#27364a;color:#b4c9e6}}@media (max-width:640px){}
+/* mobile */
+html,body{max-width:100%}
+.ai,.banner,.card{overflow-wrap:anywhere}
+.controls label{flex-wrap:wrap;max-width:100%}
+select{max-width:100%;min-width:0}
+.card,.tblwrap,.rel{min-width:0}
+.tblwrap{max-width:100%;-webkit-overflow-scrolling:touch}
+.tbl th{position:static}
+@media(max-width:600px){
+ .card{padding:12px 10px 10px;margin:12px 0}
+ .controls{gap:8px 12px}
+ .controls label{width:100%}
+ .controls label select{flex:1 1 auto;width:100%}
+ .seg{max-width:100%;flex-wrap:wrap}
+ .tip{white-space:normal;max-width:70vw}
+ .tbl{font-size:.78rem}
+ .tiles.k4{grid-template-columns:1fr}
+}
+</style>
 </head>
 <body>
 <header>
@@ -224,13 +243,13 @@ const staticLegend = (leg,ser) => leg.replaceChildren(...ser.map(s=>el('span',{s
   const host=$('#facts'); const e=enr(); const ex=DATA.expenditure; const real=(v,y)=>v*factor(y);
   const sp=ex.program_group.special_education, tc=ex.activity_group.teaching, tot=ex.total;
   const a=real(tot['2015-16'],'2015-16'), b=real(tot['2024-25'],'2024-25'), sa=real(sp['2015-16'],'2015-16'), sb=real(sp['2024-25'],'2024-25'), ta=real(tc['2015-16'],'2015-16'), tb_=real(tc['2024-25'],'2024-25');
-  const pp=y=>real(tot[y],y)/e[y]; const as=y=>(DATA.staffing.category.all_staff.fte||{})[y];
+  const EF=DATA.enrollment.fte_annual_avg; const ppf=y=>real(tot[y],y)/EF[y]; const as=y=>(DATA.staffing.category.all_staff.fte||{})[y];
   const RG=DATA.revenue.groups, rvy=y=>DATA.revenue.total[y], stt=y=>(RG.state_general_purpose[y]||0)+(RG.state_special_purpose[y]||0);
   const T=(cls,h,big,sub1,sub2)=>el('div',{class:'tile '+cls},el('div',{class:'tl'},h),el('div',{class:'tb'},big),el('div',{class:'ts'},sub1),sub2?el('div',{class:'ts'},sub2):'');
   host.append(el('h2',{},'Key facts'),el('p',{class:'muted small'},'Arithmetic on the reported data below (tag CALCULATED). Dollars are 2024-25 dollars (Seattle CPI) unless stated as reported. Comparisons start in 2015-16, the first year on this page; the last year is 2025-26 for staffing and enrollment and 2024-25 for finances (latest F-196).'),
    el('div',{class:'tiles k4'},
     T('kc1','Students, 2015-16 to 2025-26',fmt.pct(e['2025-26']/e['2015-16']-1),`${fmt.int(e['2015-16'])} to ${fmt.int(e['2025-26'])} average headcount`,`2019-20 was the high-water mark (${fmt.int(e['2019-20'])}); ${fmt.pct(e['2025-26']/e['2019-20']-1)} from there`),
-    T('kc1','Spending per student, 2015-16 to 2024-25',fmt.pct(tot['2024-25']/e['2024-25']/(tot['2015-16']/e['2015-16'])-1),`${fmt.usd(tot['2015-16']/e['2015-16'])} to ${fmt.usd(tot['2024-25']/e['2024-25'])} as reported`,`After adjusting for prices: ${fmt.pct(pp('2024-25')/pp('2015-16')-1)} (${fmt.pct(pp('2019-20')/pp('2015-16')-1)} by 2019-20, then ${fmt.pct(pp('2024-25')/pp('2019-20')-1)} to 2024-25)`),
+    T('kc1','Spending per student FTE, 2015-16 to 2024-25',fmt.pct(tot['2024-25']/EF['2024-25']/(tot['2015-16']/EF['2015-16'])-1),`${fmt.usd(tot['2015-16']/EF['2015-16'])} to ${fmt.usd(tot['2024-25']/EF['2024-25'])} as reported`,`After adjusting for prices: ${fmt.pct(ppf('2024-25')/ppf('2015-16')-1)} (${fmt.pct(ppf('2019-20')/ppf('2015-16')-1)} by 2019-20, then ${fmt.pct(ppf('2024-25')/ppf('2019-20')-1)} to 2024-25). General fund spending divided by district-reported student FTE.`),
     T('kc2','General fund spending, 2015-16 to 2024-25',fmt.pct(b/a-1),`${fmt.usdM(a)} to ${fmt.usdM(b)} (+${fmt.usdM(b-a)})`,`Students over the same years: ${fmt.pct(e['2024-25']/e['2015-16']-1)}`),
     T('kc2','All staff FTE, 2015-16 to 2025-26',fmt.pct(as('2025-26')/as('2015-16')-1),`${fmt.int(as('2015-16'))} to ${fmt.int(as('2025-26'))} FTE`,`2019-20 was ${fmt.int(as('2019-20'))} FTE; ${fmt.pct(as('2025-26')/as('2019-20')-1)} from there`),
     T('kc3','State share of general fund revenue, 2015-16 to 2024-25',fmt.pct1(stt('2024-25')/rvy('2024-25')),`from ${fmt.pct1(stt('2015-16')/rvy('2015-16'))} in 2015-16`,'State general purpose plus state special purpose revenue'),
@@ -243,7 +262,7 @@ const staticLegend = (leg,ser) => leg.replaceChildren(...ser.map(s=>el('span',{s
      const li=t=>el('li',{},t);
      return el('div',{},
       el('ul',{class:'small'},
-       li(`Enrollment is headcount (number of students, annual average), not full-time equivalent (FTE). Staffing figures are FTE. Headcount is ${fmt.pct(e['2025-26']/e['2015-16']-1)} from 2015-16 to 2025-26 and ${fmt.pct(e['2025-26']/e['2019-20']-1)} from the 2019-20 peak.`),
+       li(`Enrollment counts (the Students tile and enrollment charts) are headcount, the annual average number of students, not full-time equivalent (FTE). Staffing figures are FTE. Spending per student uses district-reported student FTE, because funding follows FTE. Headcount is ${fmt.pct(e['2025-26']/e['2015-16']-1)} from 2015-16 to 2025-26 and ${fmt.pct(e['2025-26']/e['2019-20']-1)} from the 2019-20 peak.`),
        li(`Total dollars: in 2024-25 dollars, general fund revenue went from ${fmt.usdM(real(rvy('2015-16'),'2015-16'))} to ${fmt.usdM(real(rvy('2024-25'),'2024-25'))} and spending from ${fmt.usdM(a)} to ${fmt.usdM(b)}. In each year revenue and spending were within ${fmt.usdM(gap)} of each other, so on these actuals the two moved together and there was little room between what came in and what went out (the fund balance is not shown here). About ${fmt.usdM(['2020-21','2021-22','2022-23','2023-24'].reduce((t,y)=>t+real(RG.of_which_covid_relief_federal[y]||0,y),0))} of one-time federal COVID relief (2020-21 to 2023-24) is included and has ended.`),
        li(`What the money is spent on shifted. Special education was ${fmt.pct1(sp['2015-16']/tot['2015-16'])} of general fund spending in 2015-16, ${fmt.pct1(sp['2019-20']/tot['2019-20'])} in 2019-20 and ${fmt.pct1(sp['2024-25']/tot['2024-25'])} in 2024-25. Salaries and benefits together were ${fmt.pct1(sb_('2015-16'))}, ${fmt.pct1(sb_('2019-20'))} and ${fmt.pct1(sb_('2024-25'))}.`),
        li(`Where revenue comes from changed: the state share rose and the local levy share fell (tiles above).`),

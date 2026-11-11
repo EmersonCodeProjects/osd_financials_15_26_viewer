@@ -39,26 +39,23 @@ Every place where we regroup, calculate, infer, or assume goes here, **before** 
 | S5 | Duty-code definitions from the 2026-27 handbook are applied to all years 2015-16 to 2025-26. | Compared the 2018-19 and 2026-27 handbooks: the definitions of every duty title in Olympia's data are word-for-word the same. Differences: 49x was "Reading Resource Specialist" and is now "Behavior Analyst"; 39x "Orientation and Mobility Specialist" is new; the contractor code 640 list gained 390. None of these appears as a title in Olympia's data, and the public file does not say where it rolls them up. | Confirmed for 2018-19 onward. **2015-16 to 2017-18 are assumed** (no earlier handbook on hand; the same 33 titles appear every year with no break). | confirmed 2018-19 to 2026-27; assumed before |
 | S6 | Director/Supervisor = handbook duty 99y (classified support-service manager), not district administration. | Handbook definition. I first treated it as district administration; corrected Nov. 9. | Moves about 19 FTE and $3.3M between categories. | confirmed by handbook; supersedes first mapping |
 | S7 | Other Support Personnel is certificated (40x). | Handbook range, and 85.7 of 86.0 FTE are certificated in the data. | Small. | confirmed |
-| S8 | The public file gives titles, not duty codes or contract type, so supplemental (extra duty) rows cannot be separated from base contracts. | Data limit. | Coaching and extra-duty rows count as FTE and headcount. | limit; section removed from the viewer Nov. 10 (supports data files only) |
+| S8 | The public file gives titles, not duty codes or contract type, so supplemental (extra duty) rows cannot be separated from base contracts. | Data limit. | Coaching and extra-duty rows count as FTE and headcount. | limit |
 | S9 | Building location is available only from 2022-23. | Data limit. | No per-school or district-office views before 2022-23. | limit |
 | S10 | Headcount de-duplicates by last name + first name (upper case). | Classified staff have no ID. Certificate number exists for most certificated staff. | Merges two people with the same name; splits one person whose name is spelled differently. 2024-25: 1,443 rows, 1,440 names. | assumed |
-| S11 | S-275 is an October snapshot. | OSPI design. | Mid-year hires and departures are invisible. | limit; section removed from the viewer Nov. 10 (supports data files only) |
+| S11 | S-275 is an October snapshot. | OSPI design. | Mid-year hires and departures are invisible. | limit |
 
-### Position changes (planned view)
+### Linking across years and suppression
 | ID | What | Why / alternative | Effect | Status |
 |---|---|---|---|---|
 | P1 | People are linked across years by certificate number or name, done locally. | No position IDs exist. | `INFERRED`. "Left" and "new" include name changes, gaps, and staff on other payrolls. | assumed |
-| P2 | A person's category in a year = the category with the most FTE (ties: higher pay). | Need one category per person. | Split-role people are shown in one category only. | decided; section removed from the viewer Nov. 10 (supports data files only) |
-| P3 | Flows: stayed (same category), moved, left the list, new to the list. | Simple, checkable. | Preliminary 2024-25 to 2025-26: 1,222 stayed, 29 moved, 189 left, 206 new. | decided; section removed from the viewer Nov. 10 (supports data files only) |
 | P4 | Cells under 5 people are suppressed or merged; no names anywhere. | Impartiality; avoid identifying individuals. | Small categories show less detail. | decided |
-| P5 | This is not a count of budgeted positions. | S-275 has none. | Wording on the page must say so. | limit; section removed from the viewer Nov. 10 (supports data files only) |
 
 ### Enrollment and per-student figures
 | ID | What | Why / alternative | Effect | Status |
 |---|---|---|---|---|
 | E1 | Enrollment = annual average of monthly headcount from the district dashboard file (the closure analysis convention). Alternative: October count (matches S-275's snapshot; differs by about 0.5%). | Consistency with Phase 1. | Per-pupil and ratio figures are `CALCULATED`. | decided; test the alternative |
 | E2 | 2026-27 enrollment (September only, provisional) is excluded. | Incomplete year. | None. | decided |
-| E3 | Enrollment is headcount, not funded FTE. | Headcount is what the community discusses. | Per-pupil values differ from OSPI's. | decided |
+| E3 | Enrollment is headcount, not funded FTE. | Headcount is what the community discusses. | Per-pupil values differ from OSPI's. | decided; per-student dollars use FTE instead (E5) |
 
 ### Benchmarks
 | ID | What | Why / alternative | Effect | Status |
@@ -68,9 +65,6 @@ Every place where we regroup, calculate, infer, or assume goes here, **before** 
 | B3 | Non-represented state raises are assigned to the school year containing the effective date; two in one school year are compounded (2018-19: 4.04%). | Simplest consistent rule. | `CALCULATED`. | decided |
 | B4 | July 2016 raise shown as 1.8%. The rule was "1.8% or 1% + $20, whichever is greater". | Not modeled. | Low-paid employees got more. | decided |
 | B5 | July 2020 and July 2021 (3.0% each) are marked partial. | Governor's Directive 20-08: some employees got neither. | The benchmark overstates for those employees. | confirmed by OFM note |
-| B6 | L&I wage inflation: assumed calendar year, placed on the school year starting that year. Blank from 2023. | L&I does not state calendar or rate year. | 2020 and 2021 spikes are a composition effect. | **assumed** |
-| B7 | Levy IPD: label year Y is placed on school year (Y-1)-Y. Context only; general inflation, not a pay series. | Labeled values match PCE for calendar year Y-1 in Table A4.1; the DOR page gives no period. | `INFERRED`. | assumed (by comparison) |
-| B8 | Thurston County raises: none found. | No table. | Shown as a note. | open |
 
 ### Central administration
 | ID | What | Why / alternative | Effect | Status |
@@ -85,7 +79,6 @@ Every place where we regroup, calculate, infer, or assume goes here, **before** 
 | V1 | **No single default base year.** Raw levels are the default view. Where a comparison needs a starting point, show two periods split at the enrollment peak: 2015-16 to 2019-20, then 2019-20 to 2025-26, each indexed to its own start, with a toggle for one continuous index from 2015-16. | Enrollment grew through 2019-20 and has fallen since (closure analysis), so any single base year tilts the picture. The split point comes from the enrollment data, not from the staffing result. Alternative: one fixed base year with a control. | Large. The split year is itself a choice (2020-21 was a pandemic-year count). | decided Nov. 9 (user approved); revisit after seeing the views |
 | V4 | Inflation-adjusted dollars are expressed in 2024-25 dollars using the Seattle CPI school-year index (factor = index 2024-25 / index of the year; `deflator.csv`). | 2024-25 is the latest year with both actual F-196 spending and an actual (not forecast) CPI. A price-level reference only rescales the line; the shape and the ratios between years do not change. | Display only. `CALCULATED`. | decided |
 | V2 | Aggregates only; names stay in local working files. | Impartiality. | | decided |
-| V3 | Nominal and inflation-adjusted dollars both available, nominal first. | Raw first. | | decided |
 
 ### Conventional groupings (added Nov. 9, 2026, at the request of the community lead)
 | ID | What | Why / alternative | Effect | Status |
@@ -101,7 +94,6 @@ Every place where we regroup, calculate, infer, or assume goes here, **before** 
 ### Overlays and community-list check
 | ID | What | Why / alternative | Effect | Status |
 |---|---|---|---|---|
-| V5 | The enrollment overlay charts can be shown raw (default) or indexed so the first year equals 100. Index = value / value in 2015-16 x 100. Revenue and spending panels end in 2024-25 because the last F-196 year is 2024-25. | Raw values hide percent change when series differ in size; indexing is offered as a labeled overlay only. | Display only. `CALCULATED`. | decided |
 | C4 | We matched the people in the community group's three staff lists (2020-21, 2023-24, 2025-26) to S-275 by last name and first three letters of first name, locally. Only counts and dollars are kept (`community_match.csv`, `community_list_composition.csv`). Titles in their lists were mapped to our groups by the S-275 title at the start of each entry. | To test whether their totals describe real payroll. Alternative: compare totals only. | 90-96% of listed people were found in S-275, and every found person's salary agreed within 1% (usually to the dollar). Unmatched people (4 to 10 per year) may be name changes, spelling differences, people paid outside the S-275 report, or not in the S-275 file; we did not chase them. | confirmed for matched people |
 | G8 | **Building-based groups, 2022-23 on.** Each S-275 row is placed by where it is coded. Rows coded to the district location (1035) are district, except Operators (bus drivers), who are student-facing support staffing. Rows coded to a school keep their job-title group; school-coded Office/Clerical is school office staff (counted with the front office), school-coded Technical/Professional is support staffing. Superintendent, deputy and manager titles (13x, 99y) stay district wherever coded. District-coded staff who are not managers, not office/technical/professional, and not bus drivers (trades, laborers, custodial and food service, aides, therapists, speech-language) are "other staff coded to the district location" and counted as district. | Community lead's rule: coded to a school building means very likely student-facing; coded to a non-school building means very likely not, unless a bus driver. Supersedes G4. Alternatives: treat all trades and itinerant therapists as student-facing; use job title only (still available as the all-years view). | Moves FTE between groups. Itinerant staff (for example speech-language pathologists) coded to the district location may serve students at several schools but are counted as district; the Staffing definitions tab lists them. `REGROUPED`. | **assumed** |
 | G9 | **Non-student-facing tiers, version 2.** (1) Total non-student-facing: everyone coded to the district location except bus drivers. (2) District office staff (office, technical, professional coded to the district location) plus managers plus superintendent. (3) Managers plus superintendent, by job title. Tiers 1 and 2 need the building column (2022-23 on). Tier 3 has all years because it uses job title only. A fourth line adds bus drivers. An overlay adds people the community list places in the district building but S-275 codes to a school (EXTERNAL, 2023-24 and 2025-26 only). Supersedes G6. | The tiers answer "who counts as district" three ways. Not extended before 2022-23 because the building is unknown; carrying 2022-23 locations back would miss about a quarter of the people on the 2020-21 community list, who had left before 2022-23. | Tiers are approximately, not strictly, nested. `REGROUPED`. | **assumed (please confirm)** |
@@ -127,33 +119,11 @@ Every place where we regroup, calculate, infer, or assume goes here, **before** 
 | E4 | **Exception to aggregate-only:** the superintendent position's pay is published by title (no name), because it is a single public office, its pay is public record and published by the district, and the community's question is about this position. Superintendent evaluation and removal stay out of scope. | Rule P4 would suppress a group of one. Alternative: leave it out (the question cannot then be answered). | One position's pay is visible. **Can be removed on request.** | **assumed (community lead asked for this comparison; remove if you prefer)** |
 | X1 | External pay figures (governor and State Superintendent of Public Instruction schedules from session laws and salaries.wa.gov; agency head pay from OFM tables dated July 2020 and Oct. 1, 2024) are placed on the school year containing their effective date (July 1 starts a school year; 2018-19 uses the Sept. 1, 2018 schedule). They are salary only, with no benefits. Earlier governor schedules were not retrieved. Agency head pay for 2025-26 was not retrieved. | Salary-to-salary comparison. The "current 2024" column of the 2025 schedule PDF has no year label and is read as 2024. | `EXTERNAL`. | confirmed against sources; some years missing |
 
-## Charts and what each depends on (draft)
-| Chart | Shows | Tags | Depends on |
-|---|---|---|---|
-| Staff FTE by title, by year | S-275 FTE as reported | `RAW` (title), `REGROUPED` (category) | S1, S2, S4-S9, S11 |
-| Growth comparison (NCES-style) | % change from base year; staff groups and enrollment | `CALCULATED` | above + E1-E3, V1 |
-| Spending by program/activity/object | F-196 dollars | `RAW`, `REGROUPED` | F1-F6 |
-| Per-pupil spending vs. inflation | dollars / enrollment; CPI index | `CALCULATED` | F1-F6, E1-E3, B1, B2 |
-| Position changes (removed from viewer Nov. 10) | net FTE by title; flows | `CALCULATED`, `INFERRED` | S10, P1-P5 |
-| Central admin | four measures and the district's figure | `RAW`, `REGROUPED`, `EXTERNAL` | F7, S6, C1-C3 |
-| Pay vs. benchmarks | average comp per FTE; raises; CPI | `CALCULATED`, `INFERRED` | S2, S3, B1-B8 |
-
-## Which views need a base year, and which do not
-| View | Needs a base year? | Note |
-|---|---|---|
-| FTE and headcount by title or category, as reported | No | `RAW` / `REGROUPED` |
-| Enrollment, as reported | No | `RAW` |
-| Staff per 100 students; per-pupil spending | No | `CALCULATED` ratio for each year on its own |
-| Spending by program, activity, object; shares of the general fund | No | `RAW` / `REGROUPED`; shares are `CALCULATED` |
-| Year-over-year % change | No | `CALCULATED` |
-| Central admin measures and the district's 4.88% | No | |
-| Growth comparison (NCES-style): % change in staff groups vs. enrollment | **Yes** | V1 |
-| Cumulative spending growth vs. inflation (Edunomics-style) | **Yes** | V1 |
-| Pay growth vs. raises and CPI, cumulative | **Yes** | V1 |
-| Inflation-adjusted dollars | A price-level year only | V4 |
-
-| V7 | Charts offer a global toggle for straight-line (least-squares) trends with R² on line charts. Fit uses all non-missing years shown, years evenly spaced; R² is the share of year-to-year variation a straight line explains. No other statistics. Stacked-bar charts have no trend option. | Quick check of whether series grow in roughly straight lines. Alternative: none needed; no significance testing, because with 10-11 points and autocorrelated series it would mislead. | `CALCULATED`. | decided; withdrawn Nov. 10: toggle removed (adjusted for inflation the series are not straight, so a line fit says little) |
+### Presentation, Key facts and Pay tab (added Nov. 10-11, 2026)
+| ID | What | Why / alternative | Effect | Status |
+|---|---|---|---|---|
 | V8 | Nov. 10 presentation changes: tables and notes under figures are collapsed by default (kept visible: the source note under the first chart, the small-group caution under the growth chart, and the conclusion under the recoding table); an AI-use note was added at the top; the sections "Changes between two years, by group, and where people went" and "Not yet on this page" were removed. | User direction: reduce clutter and duplication; the removed section rested on linking people across years by name (inferred) and was not meaningful. | No data changed. `REGROUPED`. | decided |
 | K1 | Key facts are eight tiles in three color-coded clusters: students and spending per student; general fund spending and all staff FTE; state share, local levy share, special education spending and teaching spending. All start in 2015-16 (last year 2025-26 for students and staff, 2024-25 for finances). 2019-20 (the enrollment peak) is noted on the tiles. "Teaching" is the F-196 activity "Teaching", which includes special education teaching, so it overlaps the special education tile. Dropped: revenue per student, admin staff FTE, non-student-facing compensation. | User direction (the second cluster pairs total spending with staff FTE; the request's wording was ambiguous and we assumed total general fund spending). | Staff FTE is +9.4% from 2015-16 but -4.8% from 2019-20 (the S-275 shows hiring through 2019-20). `CALCULATED`. | decided |
 | PY10 | Pay tab order and content: Key points (four neutral statements) first; the true/false claims block was removed; the superintendent section is last and compares the position with other Washington superintendents (median, 25th and 75th percentiles, similar-size median), with elected-official schedules and agency head pay only in a collapsed table and note. The district-employees-by-pay-level table is kept (collapsed) and retitled. State bottom step is shown by default beside the top step. Labels for the represented state employee lines were changed as the user asked. | User direction: neutral tone; superintendent comparison shows how Olympia ranks among superintendents rather than leading with the governor. | `CALCULATED`, `EXTERNAL`. | decided |
 | K2 | A collapsed note "What these data do and do not show" sits under the Key facts tiles. All figures in it are computed in the page from the same data as the tiles. It states that enrollment is headcount, not FTE. It does not cross-reference outside analyses and draws no conclusion about closures. | User direction Nov. 10 (keep the viewer stand-alone and descriptive). | `CALCULATED`. | decided |
+| E5 | The Key facts tile "Spending per student FTE" divides total general fund spending by annual-average student FTE (`fte_annual_avg` in `enrollment.csv`: the average of the monthly FTE column in the district enrollment dashboard file). Student counts and enrollment charts remain headcount (E1, E3). | Funding follows FTE, so dollars-per-student arithmetic is better matched to FTE. The dashboard's FTE definition has not been checked against OSPI's reported funded FTE (label: district-reported). | Per student FTE spending change since 2019-20 is larger than on headcount because FTE fell more than headcount. `CALCULATED`. | decided; check against OSPI funded FTE |
