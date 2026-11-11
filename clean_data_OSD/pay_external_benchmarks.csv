@@ -1,0 +1,19 @@
+series,school_year,value,unit,period_in_source,source,note
+governor_salary,2018-19,177107,usd_per_year,effective 2018-09-01,https://lawfilesext.leg.wa.gov/biennium/2019-20/Htm/Bills/Session%20Laws/House/2019SALARYSCHEDULE.SL.htm,Salary only. Schedule effective dates placed on the school year that contains them (July 1 effective dates start a school year).
+governor_salary,2019-20,182179,usd_per_year,effective 2019-07-01,https://lawfilesext.leg.wa.gov/biennium/2019-20/Htm/Bills/Session%20Laws/House/2019SALARYSCHEDULE.SL.htm,
+governor_salary,2020-21,187353,usd_per_year,effective 2020-07-01,https://lawfilesext.leg.wa.gov/biennium/2019-20/Htm/Bills/Session%20Laws/House/2019SALARYSCHEDULE.SL.htm,
+governor_salary,2021-22,187353,usd_per_year,effective 2021-07-01 (unchanged),https://lawfilesext.leg.wa.gov/biennium/2021-22/Pdf/Bills/Session%20Laws/House/2021SALARYSCHEDULE.SL.pdf,
+governor_salary,2022-23,190632,usd_per_year,effective 2022-07-01,https://lawfilesext.leg.wa.gov/biennium/2021-22/Pdf/Bills/Session%20Laws/House/2021SALARYSCHEDULE.SL.pdf,
+governor_salary,2023-24,198257,usd_per_year,effective 2023-07-01,https://lawfilesext.leg.wa.gov/biennium/2023-24/Pdf/Bills/Session%20Laws/House/SALAR.SL.pdf,
+governor_salary,2024-25,204205,usd_per_year,effective 2024-07-01,https://lawfilesext.leg.wa.gov/biennium/2023-24/Pdf/Bills/Session%20Laws/House/SALAR.SL.pdf,
+governor_salary,2025-26,218744,usd_per_year,effective 2025-07-01,https://salaries.wa.gov/sites/default/files/public/2025%202026%20Final%20Salary%20Schedule.pdf,
+governor_salary,2026-27,234275,usd_per_year,effective 2026-07-01,https://salaries.wa.gov/sites/default/files/public/2025%202026%20Final%20Salary%20Schedule.pdf,"Commission voted Oct. 15, 2026 to recommend no raise for the next two years; not final until Feb. 2027 (OPB, Oct. 16, 2026)."
+spi_salary,2018-19,136910,usd_per_year,effective 2018-09-01,https://lawfilesext.leg.wa.gov/biennium/2019-20/Htm/Bills/Session%20Laws/House/2019SALARYSCHEDULE.SL.htm,State Superintendent of Public Instruction (elected).
+spi_salary,2019-20,145860,usd_per_year,effective 2019-07-01,https://lawfilesext.leg.wa.gov/biennium/2019-20/Htm/Bills/Session%20Laws/House/2019SALARYSCHEDULE.SL.htm,
+spi_salary,2020-21,153000,usd_per_year,effective 2020-07-01,https://lawfilesext.leg.wa.gov/biennium/2019-20/Htm/Bills/Session%20Laws/House/2019SALARYSCHEDULE.SL.htm,
+spi_salary,2024-25,166762,usd_per_year,"""current"" column before 2025-07-01",https://salaries.wa.gov/sites/default/files/public/2025%202026%20Final%20Salary%20Schedule.pdf,"Column labeled ""current"" with no year in the PDF; read as the 2024 amount."
+spi_salary,2025-26,171765,usd_per_year,effective 2025-07-01,https://salaries.wa.gov/sites/default/files/public/2025%202026%20Final%20Salary%20Schedule.pdf,
+spi_salary,2026-27,175200,usd_per_year,effective 2026-07-01,https://salaries.wa.gov/sites/default/files/public/2025%202026%20Final%20Salary%20Schedule.pdf,
+agency_head_pay,2020-21,207864,usd_per_year,OFM July 2020: highest agency heads,https://salaries.wa.gov/sites/default/files/public/2020%20Agency%20Heads%20vs%20Elected%20Officials%20Salaries.pdf,"Four agency heads at $207,864; 7 agency heads earned more than the governor ($187,353); lowest listed agency head $149,028."
+agency_head_pay,2024-25,251208,usd_per_year,OFM Oct. 1 2024: highest excluding Health,https://salaries.wa.gov/sites/default/files/public/2024%20Agency%20Heads%20vs%20Elected%20Officials%20Salaries.pdf,"21 of 25 listed agency heads earned more than the governor ($204,205). Range $179,700 to $251,208 excluding Health ($341,760, which the source note ties to a medical pay band). 12 agencies at $220,644; 7 at $251,208."
+agency_head_pay_low,2024-25,179700,usd_per_year,OFM Oct. 1 2024: lowest listed,https://salaries.wa.gov/sites/default/files/public/2024%20Agency%20Heads%20vs%20Elected%20Officials%20Salaries.pdf,Lottery Commission.

@@ -1,0 +1,111 @@
+code_type,code,ospi_description,viewer_group
+program,01,Basic Education,basic_education
+program,02,Basic Education - Alternative learning Experience,basic_education
+program,03,Basic Education - Dropout Reengagement,basic_education
+program,09,Transition to Kindergarten,basic_education
+program,11,Special Purpose - SLFRF Enrollment Stabilization,covid_relief_and_stabilization
+program,12,Special Purpose - ESSER II,covid_relief_and_stabilization
+program,13,Special Purpose - ESSER III,covid_relief_and_stabilization
+program,14,Special Purpose - ESSER III - Learning Loss,covid_relief_and_stabilization
+program,18,Special Purpose - Reserved,covid_relief_and_stabilization
+program,19,Special Purpose - CARES Act Other,covid_relief_and_stabilization
+program,21,Special Education - Supplemental - State,special_education
+program,22,Special Education - Infants and Toddlers - State,special_education
+program,23,Special Education - ARP - IDEA - Federal,special_education
+program,24,Special Education - Supplemental - Federal,special_education
+program,25,Special Education - Infants and Toddlers - Federal,special_education
+program,26,Special Education - Institutions - State,special_education
+program,29,Special Education - Other - Federal,special_education
+program,31,Vocational - Basic - State,career_technical
+program,34,Middle School Career and Technical Education - State,career_technical
+program,38,Vocational - Federal,career_technical
+program,39,Vocational - Other Categorical,career_technical
+program,45,Skills Center - Basic - State,career_technical
+program,46,Skills Center - Federal,career_technical
+program,47,Skills Center - Facility Upgrades,career_technical
+program,51,ESEA Disadvantaged - Federal,learning_assistance_and_title
+program,52,Other Title Grants Under ESEA,learning_assistance_and_title
+program,53,ESEA Migrant - Federal,learning_assistance_and_title
+program,54,Reading First - Federal,learning_assistance_and_title
+program,55,Learning Assistance Program (LAP) - State,learning_assistance_and_title
+program,56,"State Institutions, Centers, and Homes - Delinquent",learning_assistance_and_title
+program,57,State Institutions - Neglected and Delinquent - Federal,learning_assistance_and_title
+program,58,Special and Pilot Programs - State,other_instructional_programs
+program,59,Institutions - Juveniles in Adult Jails,learning_assistance_and_title
+program,61,Head Start - Federal,other_instructional_programs
+program,62,Math and Science - Professional Development - Federal,learning_assistance_and_title
+program,64,Limited English Proficiency - Federal,english_learners_bilingual
+program,65,Transitional Bilingual - State,english_learners_bilingual
+program,67,Indian Education - Federal - JOM,other_instructional_programs
+program,68,Indian Education - Federal - ED,other_instructional_programs
+program,69,Compensatory - Other,learning_assistance_and_title
+program,71,Traffic Safety,other_instructional_programs
+program,73,Summer School,other_instructional_programs
+program,74,Highly Capable,highly_capable
+program,75,Professional Development - State,other_instructional_programs
+program,76,Targeted Assistance - Federal,learning_assistance_and_title
+program,78,Youth Training Programs - Federal,other_instructional_programs
+program,79,Instructional Programs - Other,other_instructional_programs
+program,81,Public Radio and Television,community_and_early_learning
+program,86,Community Schools,community_and_early_learning
+program,88,Early Learning,community_and_early_learning
+program,89,Other Community Services,community_and_early_learning
+program,97,Districtwide Support,districtwide_support
+program,98,School Food Services,food_service
+program,99,Pupil Transportation,transportation
+activity,11,Board of Directors,general_administration
+activity,12,Superintendent's Office,general_administration
+activity,13,Business Office,general_administration
+activity,14,Human Resources,general_administration
+activity,15,Public Relations,general_administration
+activity,21,Supervision - Instruction,instructional_support_and_other_student_services
+activity,22,Learning Resources,instructional_support_and_other_student_services
+activity,23,Principal's Office,building_administration
+activity,24,Guidance and Counseling,instructional_support_and_other_student_services
+activity,25,Pupil Management,instructional_support_and_other_student_services
+activity,26,Health and Related Services,instructional_support_and_other_student_services
+activity,27,Teaching,teaching
+activity,28,Extracurricular,instructional_support_and_other_student_services
+activity,29,Payments to School Districts,instructional_support_and_other_student_services
+activity,31,Instructional Professional Development,instructional_support_and_other_student_services
+activity,32,Instructional Technology,instructional_support_and_other_student_services
+activity,33,Curriculum,instructional_support_and_other_student_services
+activity,34,Professional Learning - State,instructional_support_and_other_student_services
+activity,35,Pupil Safety,instructional_support_and_other_student_services
+activity,41,Supervision - Food Service,food_service
+activity,42,Food,food_service
+activity,44,Operations - Food Service,food_service
+activity,49,Transfers - Food Service,food_service
+activity,51,Supervision - Transportation,transportation
+activity,52,Operations - Transportation,transportation
+activity,53,Maintenance - Transportation,transportation
+activity,56,Insurance - Transportation,transportation
+activity,58,Remote Learning Opperations,transportation
+activity,59,Transfers - Transportation,transportation
+activity,61,Supervision - Maintenance and Operations,maintenance_and_operations
+activity,62,Grounds Maintenance,maintenance_and_operations
+activity,63,Operations of Buildings,maintenance_and_operations
+activity,64,Maintenance,maintenance_and_operations
+activity,65,Utilities,maintenance_and_operations
+activity,66,E-Rate - Federal,maintenance_and_operations
+activity,67,Building and Property Security,maintenance_and_operations
+activity,68,Insurance - Maintenance and Operations,maintenance_and_operations
+activity,69,Depreciation Sub-Fund Facility Maintenance,maintenance_and_operations
+activity,72,Informational Systems,district_support_services
+activity,73,Printing,district_support_services
+activity,74,Warehousing and Distribution,district_support_services
+activity,75,Motor pool,district_support_services
+activity,83,Interest,debt_service
+activity,84,Principal,debt_service
+activity,85,Debt Service,debt_service
+activity,91,Public Activities,public_activities
+object,0,Debit Transfer,transfers
+object,1,Credit Transfer,transfers
+object,2,Salaries - Certificated Employees,certificated_salaries
+object,3,Salaries - Classified Employees,classified_salaries
+object,4,Employee Benefits and Payroll Taxes,benefits_and_payroll_taxes
+object,5,"Supplies, Instructional Resources, and Non-Capitalized Items",supplies_and_materials
+object,7,Purchased Services,purchased_services
+object,8,Travel,travel
+object,9,Capital Outlay,capital_outlay
+object,6,(not in OSPI code list; $0 in every Olympia year),unlisted

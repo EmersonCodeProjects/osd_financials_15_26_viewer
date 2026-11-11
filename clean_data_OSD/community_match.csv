@@ -1,0 +1,4 @@
+school_year,listed_rows,listed_total_compensation,matched_to_s275,share_matched,pay_within_1pct_of_s275,matched_listed_compensation,matched_s275_compensation,unmatched_rows,unmatched_compensation,matched_people_under_0_95_fte,derivation,decision_ids
+2020-21,95,11333072,91,0.958,91,10670329,10670326,4,761204,10,CALCULATED,"C1,C2,C4"
+2023-24,110,14300783,103,0.936,103,13102058,13132317,7,1198725,21,CALCULATED,"C1,C2,C4"
+2025-26,102,14215213,92,0.902,92,12693053,12702032,10,1782228,16,CALCULATED,"C1,C2,C4"

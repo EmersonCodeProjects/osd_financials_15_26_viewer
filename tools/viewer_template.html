@@ -1,0 +1,623 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Olympia School District: staffing, spending, and revenue over time</title>
+<style>
+:root{--bg:#fbfaf7;--panel:#ffffff;--ink:#1d2330;--muted:#5d6678;--line:#d9dde5;--grid:#e8ebf0;--accent:#1f5f8b;
+--c1:#1f5f8b;--c2:#c0562a;--c3:#2f8f5b;--c4:#8a5bb0;--c5:#b8932b;--c6:#3b9aa8;--c7:#a8415e;--c8:#6b7280;--c9:#444b8f;--c10:#7a8f2f;--c11:#cc7a00;--c12:#00796b;
+--raw:#2f8f5b;--regrouped:#1f5f8b;--calculated:#b8932b;--inferred:#c0562a;--external:#6b7280}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#14171d;--panel:#1b1f27;--ink:#e8eaf0;--muted:#a1a9ba;--line:#323846;--grid:#2a3040;--accent:#6bb2e0;
+--c1:#6bb2e0;--c2:#f0905c;--c3:#5fc58b;--c4:#bb92e0;--c5:#e0bd55;--c6:#6cc7d4;--c7:#e07a97;--c8:#9aa2b2;--c9:#8e96e0;--c10:#b6cc5b;--c11:#f0a73a;--c12:#4dc6b6;
+--raw:#5fc58b;--regrouped:#6bb2e0;--calculated:#e0bd55;--inferred:#f0905c;--external:#9aa2b2}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+header,main,footer{max-width:1040px;margin:0 auto;padding:0 16px}
+header{padding-top:28px}
+h1{font-size:1.65rem;line-height:1.2;margin:0 0 8px}
+h2{font-size:1.25rem;margin:0 0 4px}
+p{margin:6px 0}.muted{color:var(--muted)}.small{font-size:.875rem}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:18px 18px 14px;margin:18px 0}
+.banner{border-left:4px solid var(--inferred);background:var(--panel);border-radius:6px;padding:10px 14px;margin:14px 0;border:1px solid var(--line);border-left-width:4px}
+.controls{display:flex;flex-wrap:wrap;gap:10px 18px;margin:10px 0 6px;align-items:center}
+.controls label{font-size:.9rem;color:var(--muted);display:flex;gap:6px;align-items:center}
+select,button{font:inherit;font-size:.9rem;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:4px 8px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.seg button{border:0;border-radius:0;background:var(--panel);padding:4px 10px;cursor:pointer}
+.seg button[aria-pressed=true]{background:var(--accent);color:#fff}
+.legend{display:flex;flex-wrap:wrap;gap:4px 12px;margin:6px 0}
+.legend button{display:flex;gap:6px;align-items:center;border:0;background:none;padding:2px 4px;cursor:pointer;font-size:.85rem;color:var(--ink)}
+.legend .lg-h{flex-basis:100%;font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin-top:6px}
+.legend button[aria-pressed=false]{opacity:.35;text-decoration:line-through}
+.sw{width:12px;height:12px;border-radius:2px;display:inline-block}
+svg{width:100%;height:auto;display:block;overflow:visible}
+svg text{fill:var(--muted);font-size:11px}
+.tbl{width:100%;border-collapse:collapse;font-size:.85rem;margin-top:8px}
+.tbl th,.tbl td{padding:4px 6px;border-bottom:1px solid var(--grid);text-align:right}
+.tbl th:first-child,.tbl td:first-child{text-align:left}
+.tbl th{font-weight:600;color:var(--muted);position:sticky;top:0;background:var(--panel)}
+.tblwrap{overflow-x:auto}
+.foot{display:flex;flex-wrap:wrap;gap:6px 8px;align-items:center;margin-top:10px;font-size:.8rem;color:var(--muted)}
+.tag{font-size:.72rem;font-weight:700;letter-spacing:.03em;padding:1px 7px;border-radius:99px;border:1px solid currentColor}
+.tag.RAW{color:var(--raw)}.tag.REGROUPED{color:var(--regrouped)}.tag.CALCULATED{color:var(--calculated)}.tag.INFERRED{color:var(--inferred)}.tag.EXTERNAL{color:var(--external)}
+.id{font-size:.75rem;border:1px solid var(--line);border-radius:5px;padding:0 6px;background:var(--bg);color:var(--accent);cursor:pointer;text-decoration:none}
+.tip{position:absolute;pointer-events:none;background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:6px 9px;font-size:.78rem;box-shadow:0 2px 8px rgba(0,0,0,.18);z-index:5;white-space:nowrap}
+.rel{position:relative}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:720px){.two{grid-template-columns:1fr}}
+details.entry{border-top:1px solid var(--grid);padding:6px 0}
+details.entry summary{cursor:pointer}
+nav a{margin-right:14px;font-size:.9rem;color:var(--accent)}
+code{font-size:.85em}
+.tabs{display:flex;flex-wrap:wrap;gap:6px;margin:14px 0 4px;border-bottom:1px solid var(--line)}
+.tabs button{border:1px solid var(--line);border-bottom:0;border-radius:8px 8px 0 0;background:var(--bg);padding:7px 14px;cursor:pointer;font-size:.95rem}
+.tabs button[aria-selected=true]{background:var(--panel);font-weight:600;color:var(--accent)}
+.subnav{margin:10px 0 0}
+.tabpanel[hidden]{display:none}
+h3.s{font-size:.95rem;margin:12px 0 0}
+.tbl td.num{text-align:right}
+.fold{margin:8px 0}.fold>summary{cursor:pointer;font-size:.85rem;color:var(--muted)}.fold[open]>summary{margin-bottom:6px}
+.ai{border:1px solid var(--line);border-radius:8px;padding:8px 12px;margin:8px 0;font-size:.85rem;background:var(--bg)}
+.tiles.k4{grid-template-columns:repeat(4,1fr)}@media(max-width:900px){.tiles.k4{grid-template-columns:repeat(2,1fr)}}.tile.kc1{border-top:4px solid var(--c1)}.tile.kc2{border-top:4px solid var(--c3)}.tile.kc3{border-top:4px solid var(--c2)}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;margin:10px 0}
+.tile{border:1px solid var(--line);border-radius:8px;padding:10px 12px;background:var(--bg)}
+.tile .tl{font-size:.8rem;color:var(--muted)}.tile .tb{font-size:1.7rem;font-weight:700;line-height:1.2;margin:2px 0}.tile .ts{font-size:.8rem;color:var(--muted)}
+.vt .vd{background:#dcefe3;color:#17623a}.vp .vd{background:#fbecc8;color:#7a5600}.vn .vd{background:#e3e8ef;color:#2f4a6b}@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .vt .vd{background:#1d3b2b;color:#9fd9b6}:root:not([data-theme="light"]) .vp .vd{background:#4a3a10;color:#f0d28a}:root:not([data-theme="light"]) .vn .vd{background:#27364a;color:#b4c9e6}}@media (max-width:640px){}</style>
+</head>
+<body>
+<header>
+<h1>Olympia School District: staffing, spending, and revenue over time</h1>
+<p class="muted">Shows what the district reported to the state, with context. The charts describe; readers draw their own conclusions. Working version, Nov. 2026. Prepared independently; not affiliated with any community group.</p>
+<div class="ai"><b>About this page.</b> This viewer was generated with Claude. It covers a decade of data drawn from thousands of pages of public documentation. We have tried to minimize errors, but it is presented as is. It is meant as an aid to understanding the district&rsquo;s financial history, points of departure and trends. Every source is listed in <code>SOURCES.md</code>, every grouping and calculation is logged in the Methods tab and <code>DECISIONS_AND_INFERENCES.md</code>, and the cleaned data are in the GitHub repository (<a id="ghlink" href="https://github.com/EmersonCodeProjects/osd_financials_15_26_viewer" target="_blank" rel="noopener">github.com/EmersonCodeProjects/osd_financials_15_26_viewer</a>). To report an error or ask for a correction, open an issue on GitHub.</div>
+<div class="banner small"><b>How to read this page.</b> Charts show values as reported unless a tag says otherwise. Every figure carries a tag, and every tag links to a numbered entry on the Methods tab.
+<span class="tag RAW">RAW</span> as published &nbsp;<span class="tag REGROUPED">REGROUPED</span> summed under our category map &nbsp;<span class="tag CALCULATED">CALCULATED</span> arithmetic on reported values &nbsp;<span class="tag INFERRED">INFERRED</span> depends on a guess about what the data means &nbsp;<span class="tag EXTERNAL">EXTERNAL</span> someone else's figure, not verified by us.</div>
+<div class="tabs" role="tablist" id="tabs"></div>
+</header>
+<main>
+<div class="tabpanel" id="tab-charts">
+<nav class="subnav"><a href="#facts">Key facts</a><a href="#v1">Enrollment with&hellip;</a><a href="#v2">Growth by period</a><a href="#v3">Spending</a><a href="#v4">Revenue</a><a href="#v5">Non-student-facing staff</a></nav>
+<section class="card" id="facts"></section>
+<section class="card" id="v1"></section>
+<section class="card" id="v2"></section>
+<section class="card" id="v3"></section>
+<section class="card" id="v4"></section>
+<section class="card" id="v5"></section>
+</div>
+<div class="tabpanel" id="tab-pay" hidden><section class="card" id="pa0"></section><section class="card" id="pa5"></section><section class="card" id="pa2"></section><section class="card" id="pa3"></section><section class="card" id="pa4"></section><section class="card" id="pa1"></section></div>
+<div class="tabpanel" id="tab-defs" hidden><section class="card" id="d1"></section><section class="card" id="d2"></section></div>
+<div class="tabpanel" id="tab-facts" hidden><section class="card" id="f1"></section><section class="card" id="f2"></section><section class="card" id="f3"></section></div>
+<div class="tabpanel" id="tab-methods" hidden><section class="card" id="methods"><h2>Methods: every grouping, calculation, and assumption</h2><p class="small muted">Each entry says what we did, why, what else we could have done, and how much it could matter. Status tells you whether a source confirms it or we assumed it. Same text as <code>DECISIONS_AND_INFERENCES.md</code>.</p><div id="entries"></div></section></div>
+</main>
+<footer><p class="small muted">Sources: OSPI F-196 actual revenues and expenditures (2015-16 to 2024-25); OSPI S-275 personnel reports, October snapshot (2015-16 to 2025-26); district enrollment dashboard; OSPI S-275 handbooks; Seattle-area CPI table (Sept. 2026); community spreadsheets where tagged EXTERNAL, including the community workbook &ldquo;OSD Admin Data-For Sharing&rdquo; compiled by Janel Bistrika (2026), used with credit. Cleaned data and scripts are in the repository. Names of individuals are never published.</p></footer>
+<div id="tip" class="tip" style="display:none"></div>
+<script>
+const DATA = /*DATA*/;
+const ENTRIES = /*ENTRIES*/;
+</script>
+<script>
+const $ = (s, r=document) => r.querySelector(s);
+const el = (t, a={}, ...k) => { const e = document.createElement(t); for (const [x,y] of Object.entries(a)) { if (x==='class') e.className=y; else if (x==='html') e.innerHTML=y; else if (x.startsWith('on')) e.addEventListener(x.slice(2),y); else e.setAttribute(x,y);} k.flat().forEach(c=>e.append(c)); return e; };
+const NS='http://www.w3.org/2000/svg';
+const sv = (t,a={},...k)=>{const e=document.createElementNS(NS,t);for(const[x,y]of Object.entries(a))e.setAttribute(x,y);k.flat().forEach(c=>e.append(c));return e;};
+const fmt = {int:v=>v==null?'':Math.round(v).toLocaleString('en-US'), f1:v=>v==null?'':v.toFixed(1), f2:v=>v==null?'':v.toFixed(2), usd:v=>v==null?'':'$'+Math.round(v).toLocaleString('en-US'), usdM:v=>v==null?'':'$'+(v/1e6).toFixed(1)+'M', usdM2:v=>v==null?'':'$'+(v/1e6).toFixed(2)+'M', pct:v=>v==null?'':(v>0?'+':'')+(v*100).toFixed(1)+'%', pct1:v=>v==null?'':(v*100).toFixed(1)+'%'};
+const COLORS = ['var(--c1)','var(--c2)','var(--c3)','var(--c4)','var(--c5)','var(--c6)','var(--c7)','var(--c8)','var(--c9)','var(--c10)','var(--c11)','var(--c12)'];
+const YEARS_S = DATA.years_s275, YEARS_F = DATA.years_f196;
+const label = s => (DATA.labels[s] || s.replace(/_/g,' ').replace(/^./,c=>c.toUpperCase()));
+
+/* ---------- tooltips ---------- */
+const tip = $('#tip');
+function showTip(ev, html){ tip.innerHTML = html; tip.style.display='block'; const pad=14; let x=ev.pageX+pad, y=ev.pageY+pad; const w=tip.offsetWidth; if (x+w>window.scrollX+window.innerWidth-8) x=ev.pageX-w-pad; tip.style.left=x+'px'; tip.style.top=y+'px'; }
+function hideTip(){ tip.style.display='none'; }
+
+/* ---------- footers with tags and entry ids ---------- */
+function footer(tags, ids, source){
+  const f = el('div',{class:'foot'}, tags.map(t=>el('span',{class:'tag '+t},t)), el('span',{},'Depends on:'),
+    ids.map(i=>el('a',{class:'id',href:'#e-'+i,title:(ENTRIES[i]?ENTRIES[i].what.slice(0,160):''),onclick:ev=>{ev.preventDefault(); showTab('methods'); const d=document.getElementById('e-'+i); if(d){d.open=true; d.scrollIntoView();}}},i)), source?el('span',{},'· Source: '+source):'');
+  return f;
+}
+const TABS=[['charts','Charts'],['pay','Pay'],['defs','Staffing definitions'],['facts','Fact checks'],['methods','Methods']];
+function showTab(k){ TABS.forEach(([id])=>{ $('#tab-'+id).hidden = id!==k; }); [...$('#tabs').children].forEach((b,i)=>b.setAttribute('aria-selected',String(TABS[i][0]===k))); try{history.replaceState(null,'','#'+k);}catch(e){} window.scrollTo(0,0); }
+$('#tabs').append(...TABS.map(([id,n])=>el('button',{type:'button',role:'tab','aria-selected':'false',onclick:()=>showTab(id)},n)));
+
+/* ---------- generic charts ---------- */
+function niceMax(v){ if(v<=0) return 1; const p=Math.pow(10,Math.floor(Math.log10(v))); const n=v/p; return (n<=1?1:n<=2?2:n<=2.5?2.5:n<=5?5:10)*p; }
+function axisTicks(lo,hi,n=5){ const span=hi-lo; const raw=span/n; const p=Math.pow(10,Math.floor(Math.log10(raw))); const m=raw/p; const step=(m<=1?1:m<=2?2:m<=5?5:10)*p; const t=[]; for(let v=Math.ceil(lo/step)*step; v<=hi+1e-9; v+=step) t.push(+v.toFixed(10)); return t; }
+
+function lineChart(host, o){
+  // o: years[], series[{name,color,values[],dashed,dots}], yFmt, h, yMin, yMax, yTitle, zeroLine
+  const W=o.W||900,H=o.h||320,m={l:o.W&&o.W<600?48:64,r:14,t:10,b:30};
+  const vals=o.series.flatMap(s=>s.values.filter(v=>v!=null&&isFinite(v)));
+  let lo=o.yMin!=null?o.yMin:Math.min(...vals), hi=o.yMax!=null?o.yMax:Math.max(...vals);
+  if(o.yMin==null){ const pad=(hi-lo)*.08||1; hi+=pad; lo=o.zoom?lo-pad:Math.min(0,lo); }
+  const ticks=axisTicks(lo,hi); lo=Math.min(lo,ticks[0]); hi=Math.max(hi,ticks[ticks.length-1]);
+  const X=i=>m.l+(o.years.length===1?0:i*(W-m.l-m.r)/(o.years.length-1)), Y=v=>m.t+(hi-v)*(H-m.t-m.b)/(hi-lo);
+  const svg=sv('svg',{viewBox:`0 0 ${W} ${H}`,role:'img','aria-label':o.title||'line chart'});
+  ticks.forEach(t=>{svg.append(sv('line',{x1:m.l,x2:W-m.r,y1:Y(t),y2:Y(t),stroke:'var(--grid)'}),sv('text',{x:m.l-8,y:Y(t)+4,'text-anchor':'end'},o.yFmt(t)));});
+  if(o.zeroLine&&lo<0&&hi>0) svg.append(sv('line',{x1:m.l,x2:W-m.r,y1:Y(0),y2:Y(0),stroke:'var(--muted)','stroke-dasharray':'3 3'}));
+  o.years.forEach((y,i)=>{ if(o.years.length<=12||i%2===0) svg.append(sv('text',{x:X(i),y:H-8,'text-anchor':'middle'},o.W&&o.W<600?y.slice(2):y)); });
+  o.series.forEach(s=>{ if(s.hidden) return; let d='',pen=false; s.values.forEach((v,i)=>{ if(v==null||!isFinite(v)){pen=false;return;} d+=(pen?'L':'M')+X(i)+' '+Y(v); pen=true;});
+    if(!s.pointsOnly) svg.append(sv('path',{d,fill:'none',stroke:s.color,'stroke-width':s.w||2.2,'stroke-dasharray':s.dashed?'5 4':'none','stroke-linejoin':'round'}));
+    s.values.forEach((v,i)=>{ if(v!=null&&isFinite(v)&&(s.dots||s.pointsOnly)) svg.append(sv('circle',{cx:X(i),cy:Y(v),r:s.pointsOnly?5:3,fill:s.color})); }); });
+  const cur=sv('line',{y1:m.t,y2:H-m.b,stroke:'var(--muted)','stroke-width':1,style:'display:none'}); svg.append(cur);
+  const hit=sv('rect',{x:m.l,y:m.t,width:W-m.l-m.r,height:H-m.t-m.b,fill:'transparent'});
+  hit.addEventListener('mousemove',ev=>{ const r=svg.getBoundingClientRect(); const px=(ev.clientX-r.left)*(W/r.width); let i=Math.round((px-m.l)/((W-m.l-m.r)/(o.years.length-1))); i=Math.max(0,Math.min(o.years.length-1,i)); cur.setAttribute('x1',X(i)); cur.setAttribute('x2',X(i)); cur.style.display='';
+    const rows=o.series.filter(s=>!s.hidden&&s.values[i]!=null).map(s=>`<div><span class="sw" style="background:${s.color}"></span> ${s.name}: <b>${(s.tipFmt||o.yFmt)(s.values[i])}</b></div>`).join('');
+    showTip(ev,`<b>${o.years[i]}</b>${rows}`); });
+  hit.addEventListener('mouseleave',()=>{cur.style.display='none';hideTip();}); svg.append(hit);
+  host.replaceChildren(svg);
+}
+
+function stackedBars(host,o){
+  // o: years[], series[{name,color,values[]}], yFmt, h
+  const W=900,H=o.h||340,m={l:64,r:14,t:10,b:30};
+  const tot=o.years.map((_,i)=>o.series.reduce((a,s)=>a+(s.hidden?0:(s.values[i]||0)),0));
+  const hi0=o.yMax!=null?o.yMax:Math.max(...tot); const ticks=axisTicks(0,hi0*1.04); const hi=Math.max(ticks[ticks.length-1],hi0);
+  const bw=(W-m.l-m.r)/o.years.length, Y=v=>m.t+(hi-v)*(H-m.t-m.b)/hi;
+  const svg=sv('svg',{viewBox:`0 0 ${W} ${H}`,role:'img','aria-label':o.title||'stacked bar chart'});
+  ticks.forEach(t=>svg.append(sv('line',{x1:m.l,x2:W-m.r,y1:Y(t),y2:Y(t),stroke:'var(--grid)'}),sv('text',{x:m.l-8,y:Y(t)+4,'text-anchor':'end'},o.yFmt(t))));
+  o.years.forEach((y,i)=>{ let acc=0; o.series.forEach(s=>{ if(s.hidden) return; const v=s.values[i]||0; if(v<=0){acc+=v;return;} svg.append(sv('rect',{x:m.l+i*bw+bw*.12,width:bw*.76,y:Y(acc+v),height:Math.max(0,Y(acc)-Y(acc+v)),fill:s.color})); acc+=v; });
+    svg.append(sv('text',{x:m.l+i*bw+bw/2,y:H-8,'text-anchor':'middle'},y));
+    const hit=sv('rect',{x:m.l+i*bw,y:m.t,width:bw,height:H-m.t-m.b,fill:'transparent'});
+    hit.addEventListener('mousemove',ev=>{ const rows=o.series.filter(s=>!s.hidden&&(s.values[i]||0)!==0).slice().reverse().map(s=>`<div><span class="sw" style="background:${s.color}"></span> ${s.name}: <b>${o.yFmt(s.values[i])}</b></div>`).join(''); showTip(ev,`<b>${y}</b>${rows}<div style="border-top:1px solid var(--line);margin-top:3px">Total: <b>${o.yFmt(tot[i])}</b></div>`); });
+    hit.addEventListener('mouseleave',hideTip); svg.append(hit); });
+  host.replaceChildren(svg);
+}
+
+function fold(label,...nodes){ return el('details',Object.assign({class:'fold'},label==='What these data do and do not show'?{open:''}:{}),el('summary',{},label),...nodes); }
+function legend(host, series, onChange){
+  let last=null;
+  host.replaceChildren(...series.flatMap(s=>{ const hd=(s.sect&&s.sect!==last)?[el('div',{class:'lg-h'},s.sect)]:[]; last=s.sect||last; const b=el('button',{'aria-pressed':String(!s.hidden),type:'button'},el('span',{class:'sw',style:`background:${s.dashed?`repeating-linear-gradient(90deg,${s.color} 0 4px,transparent 4px 7px)`:s.color}`}),s.name); b.addEventListener('click',()=>{ s.hidden=!s.hidden; b.setAttribute('aria-pressed',String(!s.hidden)); onChange(); }); return [...hd,b]; }));
+}
+function seg(options, value, onChange){
+  const w=el('div',{class:'seg',role:'group'});
+  options.forEach(([k,t])=>{ const b=el('button',{type:'button','aria-pressed':String(k===value)},t); b.addEventListener('click',()=>{ [...w.children].forEach(c=>c.setAttribute('aria-pressed','false')); b.setAttribute('aria-pressed','true'); onChange(k); }); w.append(b); });
+  return w;
+}
+function table(head, rows, left=[0]){
+  const al=i=>left.includes(i)?{style:'text-align:left'}:{};
+  return el('div',{class:'tblwrap'}, el('table',{class:'tbl'}, el('thead',{},el('tr',{},head.map((h,i)=>el('th',al(i),h)))), el('tbody',{},rows.map(r=>el('tr',{},r.map((c,i)=>el('td',al(i),c==null?'':String(c))))))));
+}
+
+/* ---------- data helpers ---------- */
+const stf = (cat,measure,level='category') => (DATA.staffing[level][cat]||{})[measure]||{};
+const enr = () => DATA.enrollment.headcount_annual_avg;
+const factor = sy => DATA.deflator[sy];
+
+/* ---------- grouping helpers (G1-G10) ---------- */
+const GR = DATA.grouped, TIER = DATA.tiers;
+const gseries = (sub, m='fte', view='all_years') => (((GR[view]||{})[sub]||{})[m])||{};
+const gf = (sub, y, view='all_years') => gseries(sub,'fte',view)[y] || 0;
+const sumSubs = (subs, y, view='all_years') => subs.reduce((a, s) => a + gf(s, y, view), 0);
+const CONV = [['front_office','Front office (principals, vice principals, school administrators)',['front_office']],['teachers','Teachers (classroom teachers, paraeducators, student services)',['classroom_teachers','paraeducators','student_services']],['support','Support staffing (bus, custodial, food service, trades)',['support_staffing']],['super','Superintendent and deputy',['super']],['managers','Managers (directors, supervisors)',['managers']],['otp','Office, technical, professional staff (school or district)',['office_tech_prof']],['leave','On paid leave',['on_leave']]];
+const DET = DATA.flow_groups.map(g => [g, label(g), [g]]);
+const TECH = DATA.category_order.map(c => [c, label(c), null]);
+const BCONV = [['front','Front office (principals, vice principals, school administrators)',['front_office']],['sclerk','School office staff (school-coded Office/Clerical)',['school_clerical']],['teachers','Teachers (school-coded classroom teachers, paraeducators, student services)',['classroom_teachers','paraeducators','student_services']],['support','Support staffing (bus drivers, school custodial/food service/trades, school technical)',['support_staffing','school_tech_prof']],['super','Superintendent and deputy',['super']],['managers','Managers (directors, supervisors)',['managers']],['dstaff','District staff (everything else coded to the district location)',['district_office_staff','district_other_coded']],['leave','On paid leave',['on_leave']]];
+const BDET = ['front_office','school_clerical','classroom_teachers','paraeducators','student_services','support_staffing','school_tech_prof','super','managers','district_office_staff','district_other_coded','on_leave'].map(g=>[g,label(g),[g]]);
+const groupFte = (def, y, view='all_years') => def[2] ? sumSubs(def[2], y, view) : ((DATA.staffing.category[def[0]].fte || {})[y] || 0);
+const YEARS_B = YEARS_S.filter(y=>y>='2022-23');
+
+/* two-axis line chart: left axis and right axis, each with its own series */
+function dualChart(host,o){
+  const W=900,H=o.h||340,m={l:66,r:72,t:24,b:30};
+  const axis=ax=>{ const vals=ax.series.flatMap(s=>s.values.filter(v=>v!=null&&isFinite(v))); let lo=Math.min(...vals),hi=Math.max(...vals); const pad=(hi-lo)*.08||1; hi+=pad; lo=o.zoom?lo-pad:Math.min(0,lo); const t=axisTicks(lo,hi); return {lo:Math.min(lo,t[0]),hi:Math.max(hi,t[t.length-1]),t}; };
+  const L=axis(o.left),R=axis(o.right); const n=o.years.length;
+  const X=i=>m.l+(n===1?0:i*(W-m.l-m.r)/(n-1)), YL=v=>m.t+(L.hi-v)*(H-m.t-m.b)/(L.hi-L.lo), YR=v=>m.t+(R.hi-v)*(H-m.t-m.b)/(R.hi-R.lo);
+  const svg=sv('svg',{viewBox:`0 0 ${W} ${H}`,role:'img','aria-label':o.title||'two-axis chart'});
+  L.t.forEach(t=>svg.append(sv('line',{x1:m.l,x2:W-m.r,y1:YL(t),y2:YL(t),stroke:'var(--grid)'}),sv('text',{x:m.l-8,y:YL(t)+4,'text-anchor':'end',style:'fill:'+o.left.color},o.left.yFmt(t))));
+  R.t.forEach(t=>svg.append(sv('line',{x1:W-m.r,x2:W-m.r+4,y1:YR(t),y2:YR(t),stroke:'var(--muted)'}),sv('text',{x:W-m.r+8,y:YR(t)+4,'text-anchor':'start'},o.right.yFmt(t))));
+  svg.append(sv('text',{x:m.l-8,y:10,'text-anchor':'end',style:'fill:'+o.left.color+';font-weight:600'},o.left.title),sv('text',{x:W-m.r+8,y:10,'text-anchor':'start',style:'font-weight:600'},o.right.title));
+  o.years.forEach((y,i)=>svg.append(sv('text',{x:X(i),y:H-8,'text-anchor':'middle'},y)));
+  const draw=(s,Y)=>{ let d='',pen=false; s.values.forEach((v,i)=>{ if(v==null||!isFinite(v)){pen=false;return;} d+=(pen?'L':'M')+X(i)+' '+Y(v); pen=true;}); if(!s.pointsOnly) svg.append(sv('path',{d,fill:'none',stroke:s.color,'stroke-width':s.w||2.4,'stroke-dasharray':s.dashed?'5 4':'none'})); s.values.forEach((v,i)=>{ if(v!=null&&isFinite(v)) svg.append(sv('circle',{cx:X(i),cy:Y(v),r:s.pointsOnly?5:3,fill:s.color})); }); };
+  o.left.series.forEach(s=>draw(s,YL)); o.right.series.forEach(s=>draw(s,YR));
+  const cur=sv('line',{y1:m.t,y2:H-m.b,stroke:'var(--muted)','stroke-width':1,style:'display:none'}); svg.append(cur);
+  const hit=sv('rect',{x:m.l,y:m.t,width:W-m.l-m.r,height:H-m.t-m.b,fill:'transparent'});
+  hit.addEventListener('mousemove',ev=>{ const r=svg.getBoundingClientRect(); const px=(ev.clientX-r.left)*(W/r.width); let i=Math.round((px-m.l)/((W-m.l-m.r)/(n-1))); i=Math.max(0,Math.min(n-1,i)); cur.setAttribute('x1',X(i)); cur.setAttribute('x2',X(i)); cur.style.display='';
+    const rows=[...o.left.series,...o.right.series].filter(s=>s.values[i]!=null).map(s=>`<div><span class="sw" style="background:${s.color}"></span> ${s.name}: <b>${(s.tipFmt||(o.left.series.includes(s)?o.left.yFmt:o.right.yFmt))(s.values[i])}</b></div>`).join(''); showTip(ev,`<b>${o.years[i]}</b>${rows}`); });
+  hit.addEventListener('mouseleave',()=>{cur.style.display='none';hideTip();}); svg.append(hit);
+  host.replaceChildren(svg);
+}
+const staticLegend = (leg,ser) => leg.replaceChildren(...ser.map(s=>el('span',{style:'display:flex;gap:6px;align-items:center;font-size:.85rem;padding:2px 4px'},el('span',{class:'sw',style:`background:${s.dashed?`repeating-linear-gradient(90deg,${s.color} 0 4px,transparent 4px 7px)`:s.color}`}),s.name)));
+
+/* ===== Key facts ===== */
+(function(){
+  const host=$('#facts'); const e=enr(); const ex=DATA.expenditure; const real=(v,y)=>v*factor(y);
+  const sp=ex.program_group.special_education, tc=ex.activity_group.teaching, tot=ex.total;
+  const a=real(tot['2015-16'],'2015-16'), b=real(tot['2024-25'],'2024-25'), sa=real(sp['2015-16'],'2015-16'), sb=real(sp['2024-25'],'2024-25'), ta=real(tc['2015-16'],'2015-16'), tb_=real(tc['2024-25'],'2024-25');
+  const pp=y=>real(tot[y],y)/e[y]; const as=y=>(DATA.staffing.category.all_staff.fte||{})[y];
+  const RG=DATA.revenue.groups, rvy=y=>DATA.revenue.total[y], stt=y=>(RG.state_general_purpose[y]||0)+(RG.state_special_purpose[y]||0);
+  const T=(cls,h,big,sub1,sub2)=>el('div',{class:'tile '+cls},el('div',{class:'tl'},h),el('div',{class:'tb'},big),el('div',{class:'ts'},sub1),sub2?el('div',{class:'ts'},sub2):'');
+  host.append(el('h2',{},'Key facts'),el('p',{class:'muted small'},'Arithmetic on the reported data below (tag CALCULATED). Dollars are 2024-25 dollars (Seattle CPI) unless stated as reported. Comparisons start in 2015-16, the first year on this page; the last year is 2025-26 for staffing and enrollment and 2024-25 for finances (latest F-196).'),
+   el('div',{class:'tiles k4'},
+    T('kc1','Students, 2015-16 to 2025-26',fmt.pct(e['2025-26']/e['2015-16']-1),`${fmt.int(e['2015-16'])} to ${fmt.int(e['2025-26'])} average headcount`,`2019-20 was the high-water mark (${fmt.int(e['2019-20'])}); ${fmt.pct(e['2025-26']/e['2019-20']-1)} from there`),
+    T('kc1','Spending per student, 2015-16 to 2024-25',fmt.pct(tot['2024-25']/e['2024-25']/(tot['2015-16']/e['2015-16'])-1),`${fmt.usd(tot['2015-16']/e['2015-16'])} to ${fmt.usd(tot['2024-25']/e['2024-25'])} as reported`,`After adjusting for prices: ${fmt.pct(pp('2024-25')/pp('2015-16')-1)} (${fmt.pct(pp('2019-20')/pp('2015-16')-1)} by 2019-20, then ${fmt.pct(pp('2024-25')/pp('2019-20')-1)} to 2024-25)`),
+    T('kc2','General fund spending, 2015-16 to 2024-25',fmt.pct(b/a-1),`${fmt.usdM(a)} to ${fmt.usdM(b)} (+${fmt.usdM(b-a)})`,`Students over the same years: ${fmt.pct(e['2024-25']/e['2015-16']-1)}`),
+    T('kc2','All staff FTE, 2015-16 to 2025-26',fmt.pct(as('2025-26')/as('2015-16')-1),`${fmt.int(as('2015-16'))} to ${fmt.int(as('2025-26'))} FTE`,`2019-20 was ${fmt.int(as('2019-20'))} FTE; ${fmt.pct(as('2025-26')/as('2019-20')-1)} from there`),
+    T('kc3','State share of general fund revenue, 2015-16 to 2024-25',fmt.pct1(stt('2024-25')/rvy('2024-25')),`from ${fmt.pct1(stt('2015-16')/rvy('2015-16'))} in 2015-16`,'State general purpose plus state special purpose revenue'),
+    T('kc3','Local levy share of general fund revenue, 2015-16 to 2024-25',fmt.pct1(RG.local_taxes['2024-25']/rvy('2024-25')),`from ${fmt.pct1(RG.local_taxes['2015-16']/rvy('2015-16'))} in 2015-16`,'Local taxes (levies) as a share of total revenue'),
+    T('kc3','Special education spending, 2015-16 to 2024-25',fmt.pct(sb/sa-1),`${fmt.usdM(sa)} to ${fmt.usdM(sb)} (+${fmt.usdM(sb-sa)})`,`${fmt.pct1((sb-sa)/(b-a))} of the total real increase`),
+    T('kc3','Teaching spending, 2015-16 to 2024-25',fmt.pct(tb_/ta-1),`${fmt.usdM(ta)} to ${fmt.usdM(tb_)} (+${fmt.usdM(tb_-ta)})`,`${fmt.pct1((tb_-ta)/(b-a))} of the total real increase; F-196 activity “Teaching” includes special education teaching`)),
+   fold('What these data do and do not show',(function(){
+     const ys=Object.keys(tot).filter(y=>y>='2015-16'&&y<='2024-25'); const gap=Math.max(...ys.map(y=>Math.abs(real(rvy(y),y)-real(tot[y],y))));
+     const OG=ex.object_group, sb_=y=>(OG.certificated_salaries[y]+OG.classified_salaries[y]+OG.benefits_and_payroll_taxes[y])/tot[y];
+     const li=t=>el('li',{},t);
+     return el('div',{},
+      el('ul',{class:'small'},
+       li(`Enrollment is headcount (number of students, annual average), not full-time equivalent (FTE). Staffing figures are FTE. Headcount is ${fmt.pct(e['2025-26']/e['2015-16']-1)} from 2015-16 to 2025-26 and ${fmt.pct(e['2025-26']/e['2019-20']-1)} from the 2019-20 peak.`),
+       li(`Total dollars: in 2024-25 dollars, general fund revenue went from ${fmt.usdM(real(rvy('2015-16'),'2015-16'))} to ${fmt.usdM(real(rvy('2024-25'),'2024-25'))} and spending from ${fmt.usdM(a)} to ${fmt.usdM(b)}. In each year revenue and spending were within ${fmt.usdM(gap)} of each other, so on these actuals the two moved together and there was little room between what came in and what went out (the fund balance is not shown here). About ${fmt.usdM(['2020-21','2021-22','2022-23','2023-24'].reduce((t,y)=>t+real(RG.of_which_covid_relief_federal[y]||0,y),0))} of one-time federal COVID relief (2020-21 to 2023-24) is included and has ended.`),
+       li(`What the money is spent on shifted. Special education was ${fmt.pct1(sp['2015-16']/tot['2015-16'])} of general fund spending in 2015-16, ${fmt.pct1(sp['2019-20']/tot['2019-20'])} in 2019-20 and ${fmt.pct1(sp['2024-25']/tot['2024-25'])} in 2024-25. Salaries and benefits together were ${fmt.pct1(sb_('2015-16'))}, ${fmt.pct1(sb_('2019-20'))} and ${fmt.pct1(sb_('2024-25'))}.`),
+       li(`Where revenue comes from changed: the state share rose and the local levy share fell (tiles above).`),
+       li(`Most of the real increase in spending is in teaching and special education. These overlap, because special education teaching is counted in both.`),
+       li(`Not covered here: closure savings, building-level costs and capacity, the district's budget projections, and the fund balance. These data are district-wide general fund actuals through 2024-25 and staffing through 2025-26.`)));
+   })()),
+   footer(['CALCULATED','REGROUPED'],['E1','E3','F1','F4','G1','B1','V4','F7'],'OSPI F-196; OSPI S-275; district enrollment dashboard'));
+})();
+
+/* ===== View 1: enrollment with one thing alongside, on two axes ===== */
+(function(){
+  const host=$('#v1'); let mode='rev', zoom=false, basis='real', gmode='conv', sbasis='title', unit='comp';
+  host.append(el('h2',{},'Enrollment, with one thing alongside it'),
+    el('p',{class:'muted small'},'Students are on the left axis. The thing alongside is on the right axis. Both axes start at zero unless you choose "zoomed", so the vertical size of each line is honest about how much it moved. Dollars default to 2024-25 dollars so years can be compared.'));
+  const ctl=el('div',{class:'controls'}), c2=el('div',{class:'controls'}); const oh=el('div',{class:'rel'}), eh=el('div',{class:'rel'}), leg=el('div',{class:'legend'}), tb=el('div'), note=el('p',{class:'small muted'});
+  host.append(ctl,c2,el('h3',{class:'s',id:'v1t'},''),leg,oh,eh,note,tb);
+  let series=[]; function setSeries(){ const defs=sbasis==='building'?(gmode==='det'?BDET:BCONV):(gmode==='conv'?CONV:gmode==='det'?DET:TECH); series=defs.map((d,i)=>({def:d,name:d[1],color:COLORS[i%12],hidden:false})); }
+  const f=y=>basis==='nominal'?1:factor(y);
+  function draw(){
+    const e=enr(); const yrs=mode==='rev'?YEARS_F:YEARS_S;
+    const left={title:'Students',color:'var(--c1)',yFmt:fmt.int,series:[{name:'Students: average headcount (left axis)',color:'var(--c1)',values:yrs.map(y=>e[y]),tipFmt:fmt.int,w:3}]};
+    oh.style.display=''; eh.replaceChildren(); let rows=[];
+    if(mode==='rev'){
+      $('#v1t').textContent='Students and general fund revenue and spending ('+(basis==='nominal'?'as reported':'2024-25 dollars')+')';
+      const S=[['Total revenue (right axis)',y=>DATA.revenue.total[y]*f(y),'var(--c3)',0],['Total spending (right axis)',y=>DATA.expenditure.total[y]*f(y),'var(--c2)',0],['Of which federal COVID relief revenue (right axis)',y=>(DATA.revenue.groups.of_which_covid_relief_federal[y]||0)*f(y),'var(--c8)',1]];
+      const ser=S.map(([n,fn,c,d])=>({name:n,color:c,values:yrs.map(fn),dashed:!!d,tipFmt:fmt.usdM2}));
+      dualChart(oh,{years:yrs,left,right:{title:'Dollars',yFmt:fmt.usdM,series:ser},zoom,h:380}); staticLegend(leg,[...left.series,...ser]);
+      rows=[...left.series,...ser].map(s=>[s.name,...s.values.map(v=>v==null?'':(s===left.series[0]?fmt.int(v):fmt.usdM(v)))]);
+      note.textContent='General fund actuals from the F-196; the last year available is 2024-25. COVID relief is part of federal revenue.';
+    } else if(mode==='teach'){
+      $('#v1t').textContent='Students and teaching staff (FTE)';
+      const S=[['All teaching staff (right axis)',['classroom_teachers','paraeducators','student_services'],'var(--c3)',1],['Classroom teachers (right axis)',['classroom_teachers'],'var(--c2)'],['Paraeducators (right axis)',['paraeducators'],'var(--c4)'],['Student services (right axis)',['student_services'],'var(--c5)']];
+      const ser=S.map(([n,subs,c,d])=>({name:n,color:c,values:yrs.map(y=>sumSubs(subs,y)),dashed:!!d,tipFmt:fmt.f1}));
+      dualChart(oh,{years:yrs,left,right:{title:'Staff FTE',yFmt:fmt.int,series:ser},zoom,h:380}); staticLegend(leg,[...left.series,...ser]);
+      rows=[...left.series,...ser].map(s=>[s.name,...s.values.map(v=>s===left.series[0]?fmt.int(v):fmt.f1(v))]);
+      note.textContent='By job title, so a few people coded to the district office are included (see the Staffing definitions tab). Paraeducators (title "Aide") also include lunch, recess and bus aides (G3). Student services: counselors, nurses, therapists, speech-language, librarians.';
+    } else if(mode==='dist'){
+      $('#v1t').textContent='Students and non-student-facing staff ('+(unit==='comp'?(basis==='nominal'?'total compensation, as reported':'total compensation, 2024-25 dollars'):'FTE')+')';
+      const T=[['1_non_student_facing','Total non-student-facing: district-coded, excluding bus drivers and itinerant student services','var(--c8)'],['2_office_staff_plus_managers_super','District office staff + managers + superintendent','var(--c4)'],['3_managers_super','Managers + superintendent','var(--c2)']];
+      const ser=T.map(([k,n,c])=>({name:n+' (right axis)',color:c,values:yrs.map(y=>unit==='fte'?(TIER[k].fte[y]??null):(TIER[k].comp[y]!=null?TIER[k].comp[y]*f(y):null)),tipFmt:unit==='fte'?fmt.f1:fmt.usdM2}));
+      dualChart(oh,{years:yrs,left,right:{title:unit==='fte'?'Staff FTE':'Dollars',yFmt:unit==='fte'?fmt.int:fmt.usdM,series:ser},zoom,h:380}); staticLegend(leg,[...left.series,...ser]);
+      rows=[...left.series,...ser].map(s=>[s.name,...s.values.map(v=>v==null?'':(s===left.series[0]?fmt.int(v):unit==='fte'?fmt.f1(v):fmt.usdM2(v)))]);
+      note.textContent='The first two lines need the S-275 building column, which exists from 2022-23. "Managers + superintendent" is by job title and has every year. Part of the fall in the widest line is staff recoded to school buildings, not cut (see the section on non-student-facing staff below).';
+    } else {
+      const ys=sbasis==='building'?YEARS_B:YEARS_S; const view=sbasis==='building'?'located':'all_years';
+      $('#v1t').textContent='Students (line above) and all staff by group, FTE (stacked)'; oh.style.display='';
+      lineChart(eh,{years:ys,series:[{name:'Average headcount',color:'var(--c1)',values:ys.map(y=>e[y]),dots:true,tipFmt:fmt.int}],yFmt:fmt.int,h:200,zoom});
+      const ser=series.map(s=>({...s,values:ys.map(y=>groupFte(s.def,y,view))}));
+      legend(leg,series,draw); stackedBars(oh,{years:ys,series:ser,yFmt:fmt.int,h:340});
+      rows=ser.map(s=>[s.name,...s.values.map(v=>fmt.f1(v))]); rows.push(['All staff',...ys.map(y=>fmt.f1((DATA.staffing.category.all_staff.fte||{})[y]))]);
+      note.textContent=sbasis==='building'?'Building basis (2022-23 on): rows coded to the district location are district, except bus drivers and itinerant student services; rows coded to a school keep their job-title group (G8).':'Job-title basis (all years): office, technical and professional staff are a separate band because their building is not known before 2022-23. Some people in these groups are coded to the district office (G8).';
+      host.insertBefore(eh,leg);
+      tb.replaceChildren(fold('Data table',table(['',...ys],rows))); return;
+    }
+    tb.replaceChildren(fold('Data table',table(['',...yrs],rows)));
+  }
+  const dollarsCtl=el('label',{},'Dollars ',seg([['real','2024-25 dollars (Seattle CPI)'],['nominal','As reported']],basis,k=>{basis=k;draw();}));
+  const unitCtl=el('label',{},'Show ',seg([['comp','Total compensation'],['fte','FTE']],unit,k=>{unit=k;sync();draw();}));
+  const grpCtl=el('label',{},'Grouping ',seg([['conv','Conventional'],['det','Detailed'],['tech','S-275 categories']],gmode,k=>{gmode=k;setSeries();draw();}));
+  const baseCtl=el('label',{},'Basis ',seg([['title','Job title (all years)'],['building','Building (2022-23 on)']],sbasis,k=>{sbasis=k;setSeries();draw();}));
+  const axCtl=el('label',{},'Axes ',seg([['zero','Start at 0'],['zoom','Zoomed to the data']],'zero',k=>{zoom=k==='zoom';draw();}));
+  function sync(){ dollarsCtl.style.display=(mode==='rev'||(mode==='dist'&&unit==='comp'))?'':'none'; unitCtl.style.display=mode==='dist'?'':'none'; grpCtl.style.display=mode==='all'?'':'none'; baseCtl.style.display=mode==='all'?'':'none'; }
+  ctl.append(el('label',{},'Alongside enrollment ',seg([['rev','Revenue and spending'],['teach','Teachers and paraeducators'],['dist','District office'],['all','All staff by group']],mode,k=>{mode=k;sync();draw();})));
+  c2.append(axCtl,dollarsCtl,unitCtl,baseCtl,grpCtl);
+  host.append(footer(['RAW','REGROUPED','CALCULATED'],['G1','G3','G8','G9','G10','S1','S2','S4','S6','E1','E3','F1','F3','B1','V4'],'OSPI S-275; OSPI F-196; district enrollment dashboard'));
+  sync(); setSeries(); draw();
+})();
+
+/* ===== View 2: growth by period ===== */
+(function(){
+  const host=$('#v2'); let mode='two', bas='title';
+  const TG={title:[['enrollment','Students (average headcount)',null,'Students'],
+      ['front_office','Principals and school administrators (front office)',['front_office'],'Schools (job titles that work in school buildings)'],
+      ['teachers','Teachers (classroom, paraeducators, student services)',['classroom_teachers','paraeducators','student_services'],'Schools (job titles that work in school buildings)'],
+      ['classroom','Classroom teachers only',['classroom_teachers'],'Schools (job titles that work in school buildings)'],
+      ['paras','Paraeducators only',['paraeducators'],'Schools (job titles that work in school buildings)'],
+      ['services','Student services only',['student_services'],'Schools (job titles that work in school buildings)'],
+      ['support','Support staffing (bus, custodial, food service, trades)',['support_staffing'],'Schools (job titles that work in school buildings)'],
+      ['admin','Admin staff (superintendent, deputy, managers)',['super','managers'],'District administration'],
+      ['otp','Office, technical, professional (schools and district office combined)',['office_tech_prof'],'Either: the job title does not say where (see the Building view)'],
+      ['all','All staff',null,'All']],
+    building:[['enrollment','Students (average headcount)',null,'Students'],
+      ['front_office','Principals and school administrators (front office)',['front_office'],'At schools (coded to a school building)'],
+      ['sclerk','School office staff',['school_clerical'],'At schools (coded to a school building)'],
+      ['teachers','Teachers (classroom, paraeducators, student services)',['classroom_teachers','paraeducators','student_services'],'At schools (coded to a school building)'],
+      ['support','Support staffing (bus drivers, school custodial/food/trades, school technical)',['support_staffing','school_tech_prof'],'At schools (coded to a school building)'],
+      ['admin','Admin staff (superintendent, deputy, managers)',['super','managers'],'At the district office (coded to the district location)'],
+      ['dstaff','Other district-office staff (office, technical, professional and others)',['district_office_staff','district_other_coded'],'At the district office (coded to the district location)'],
+      ['all','All staff',null,'All']]};
+  const on=['enrollment','admin','front_office','teachers','support']; let groups, series;
+  function setG(){ groups=TG[bas]; series=groups.map(([k,n,_s,sc],i)=>({key:k,name:n,sect:sc,color:COLORS[i%12],hidden:!on.includes(k)})); legend(leg,series,draw); }
+  const view=()=>bas==='building'?'located':'all_years';
+  const val=(k,y)=>{ if(k==='enrollment') return DATA.enrollment.headcount_annual_avg[y]; if(k==='all') return (DATA.staffing.category.all_staff.fte||{})[y]||0; return sumSubs(groups.find(g=>g[0]===k)[2],y,view()); };
+  host.append(el('h2',{},'Percent change in staff and in students, by period'),
+   el('p',{class:'muted small'},'Each line shows percent change from the first year of its period. Enrollment grew through 2019-20 and has fallen since, so the default splits at 2019-20 and restarts every line at zero there. "Job title" groups staff by their S-275 title, so a person coded to the district office but titled, say, aide, is counted as a paraeducator. "Building" groups by where the person is coded (a school building or the district location), but exists only from 2022-23. Lines are listed under Schools and District administration headings; office, technical and professional staff appear under “either” in the job title view because a title does not say where the person works.'));
+  const ctl=el('div',{class:'controls'}), leg=el('div',{class:'legend'}), ch=el('div',{class:'two'}), tb=el('div'); host.append(ctl,leg,ch,tb);
+  function draw(){
+    let P1=YEARS_S.filter(y=>y>='2015-16'&&y<='2019-20'), P2=YEARS_S.filter(y=>y>='2019-20'); const bld=bas==='building'; const PB=YEARS_B;
+    const sers=years=>series.map(s=>({...s,hidden:s.hidden,values:years.map(y=>val(s.key,y)/val(s.key,years[0])-1),dots:true,tipFmt:fmt.pct}));
+    if(bld){ const s=sers(PB); const vs=s.filter(x=>!x.hidden).flatMap(x=>x.values); ch.className=''; const d=el('div',{class:'rel'}), h=el('div'); d.append(h); ch.replaceChildren(d); lineChart(h,{years:PB,series:s,yFmt:v=>(v*100).toFixed(0)+'%',yMin:Math.min(...vs,0)-.02,yMax:Math.max(...vs,0)+.02,h:320,zeroLine:true}); }
+    else if(mode==='two'){
+      const a=sers(P1),b=sers(P2); const vs=[...a,...b].filter(s=>!s.hidden).flatMap(s=>s.values); const lo=Math.min(...vs,0),hi=Math.max(...vs,0);
+      const wrap=(t,y,s)=>{const d=el('div',{class:'rel'}); const h=el('div'); d.append(el('h3',{class:'small',style:'margin:6px 0 0'},t),h); lineChart(h,{years:y,series:s,yFmt:v=>(v*100).toFixed(0)+'%',yMin:lo-.02,yMax:hi+.02,h:300,W:460,zeroLine:true}); return d;};
+      ch.className='two'; ch.replaceChildren(wrap('2015-16 to 2019-20 (change from 2015-16)',P1,a),wrap('2019-20 to 2025-26 (change from 2019-20)',P2,b));
+    } else { ch.className=''; const s=sers(YEARS_S); const vs=s.filter(x=>!x.hidden).flatMap(x=>x.values); const d=el('div',{class:'rel'}); const h=el('div'); d.append(h); ch.replaceChildren(d); lineChart(h,{years:YEARS_S,series:s,yFmt:v=>(v*100).toFixed(0)+'%',yMin:Math.min(...vs,0)-.02,yMax:Math.max(...vs,0)+.02,h:340,zeroLine:true}); }
+    const rows=bld?groups.map(([k,n])=>{ const a=val(k,'2022-23'),c=val(k,'2025-26'); return [n,fmt.f1(a),fmt.f1(c),fmt.pct(c/a-1)]; }):groups.map(([k,n])=>{ const a=val(k,'2015-16'),b=val(k,'2019-20'),c=val(k,'2025-26'); return [n,fmt.f1(a),fmt.f1(b),fmt.f1(c),fmt.pct(b/a-1),fmt.pct(c/b-1),fmt.pct(c/a-1)]; });
+    tb.replaceChildren(el('p',{class:'small muted'},'Small groups move in steps: admin staff is about 30 FTE and the front office about 32, so one FTE is 3 percent or more. Read percent changes on small bases with the FTE shown.'),fold('Data table',table(bld?['Group (FTE; students = headcount)','2022-23','2025-26','Change 2022-23 to 2025-26']:['Group (FTE; students = headcount)','2015-16','2019-20','2025-26','Change 2015-16 to 2019-20','Change 2019-20 to 2025-26','Change 2015-16 to 2025-26'],rows)));
+    modeCtl.style.display=bld?'none':'';
+  }
+  const modeCtl=el('label',{},'View ',seg([['two','Two periods (split at 2019-20)'],['cont','One line from 2015-16']],mode,k=>{mode=k;draw();}));
+  ctl.append(el('label',{},'Group staff by ',seg([['title','Job title (all years)'],['building','Building (2022-23 on)']],bas,k=>{bas=k;setG();draw();})),modeCtl);
+  setG();
+  host.append(footer(['CALCULATED','REGROUPED'],['G1','G2','G3','G7','G8','V1','S2','S4','S6','E1','E3'],'OSPI S-275; district enrollment dashboard'));
+  draw();
+})();
+
+
+/* ===== View 3: spending ===== */
+(function(){
+  const host=$('#v3'); let gt='program_group', basis='nominal', mode='dollars';
+  host.append(el('h2',{},'General fund spending'),el('p',{class:'muted small'},'Actual general fund expenditures reported to OSPI (F-196), grouped by program, activity, or object. Other funds (capital, debt service, student body, transportation vehicles) are not included.'));
+  const ctl=el('div',{class:'controls'}),leg=el('div',{class:'legend'}),ch=el('div',{class:'rel'}),tb=el('div');
+  host.append(ctl,leg,ch,tb);
+  let series=[];
+  function build(){ const g=DATA.expenditure[gt]; const keys=Object.keys(g).sort((a,b)=>Math.max(...Object.values(g[b]))-Math.max(...Object.values(g[a]))); series=keys.map((k,i)=>({key:k,name:label(k),color:COLORS[i%12],hidden:false})); legend(leg,series,draw); }
+  function draw(){
+    const g=DATA.expenditure[gt]; const tot=DATA.expenditure.total;
+    const f=y=>basis==='nominal'?1:factor(y);
+    const ser=series.map(s=>({...s,values:YEARS_F.map(y=>mode==='dollars'?g[s.key][y]*f(y)||0:(g[s.key][y]||0)/tot[y]*100)}));
+    stackedBars(ch,{years:YEARS_F,series:ser,yFmt:mode==='dollars'?fmt.usdM:(v=>v.toFixed(0)+'%'),h:360,yMax:mode==='share'?100:undefined});
+    const rows=[...ser.map(s=>[s.name,...s.values.map(v=>mode==='dollars'?fmt.usdM(v):v.toFixed(1)+'%')]),['Total',...YEARS_F.map(y=>mode==='dollars'?fmt.usdM(tot[y]*f(y)):'100%')]];
+    tb.replaceChildren(fold('Data table',table(['Group',...YEARS_F],rows)));
+  }
+  ctl.append(el('label',{},'Group by ',seg([['program_group','Program'],['activity_group','Activity'],['object_group','Object']],gt,k=>{gt=k;build();draw();})),
+    el('label',{},'Show ',seg([['dollars','Dollars'],['share','Share of total']],mode,k=>{mode=k;draw();})),
+    el('label',{},'Dollars ',seg([['nominal','As reported'],['real','2024-25 dollars (Seattle CPI)']],basis,k=>{basis=k;draw();})));
+  host.append(footer(['RAW','REGROUPED','CALCULATED'],['F1','F2','F4','F5','F6','B1','B2','V4'],'OSPI F-196 actuals'));
+  build(); draw();
+})();
+
+/* ===== View 4: revenue ===== */
+(function(){
+  const host=$('#v4'); let basis='nominal';
+  host.append(el('h2',{},'General fund revenue'),el('p',{class:'muted small'},'Actual general fund revenues reported to OSPI (F-196), by source. Federal COVID relief (ESSER, SLFRF, CARES) is part of federal special purpose revenue and is also shown as its own line.'));
+  const ctl=el('div',{class:'controls'}),ch=el('div',{class:'rel'}),leg=el('div',{class:'legend'}),tb=el('div'); host.append(ctl,leg,ch,tb);
+  const keys=Object.keys(DATA.revenue.groups).filter(k=>k!=='of_which_covid_relief_federal'); const series=keys.map((k,i)=>({key:k,name:label(k),color:COLORS[i%12],hidden:false}));
+  function draw(){ const f=y=>basis==='nominal'?1:factor(y);
+    const ser=series.map(s=>({...s,values:YEARS_F.map(y=>(DATA.revenue.groups[s.key][y]||0)*f(y))}));
+    stackedBars(ch,{years:YEARS_F,series:ser,yFmt:fmt.usdM,h:340});
+    const cv=DATA.revenue.groups.of_which_covid_relief_federal;
+    const rows=[...ser.map(s=>[s.name,...s.values.map(fmt.usdM)]),['Total revenue',...YEARS_F.map(y=>fmt.usdM(DATA.revenue.total[y]*f(y)))],['Of which federal COVID relief',...YEARS_F.map(y=>fmt.usdM(cv[y]*f(y)))],['Total expenditures (for comparison)',...YEARS_F.map(y=>fmt.usdM(DATA.expenditure.total[y]*f(y)))]];
+    tb.replaceChildren(fold('Data table',table(['Source',...YEARS_F],rows))); }
+  legend(leg,series,draw);
+  ctl.append(el('label',{},'Dollars ',seg([['nominal','As reported'],['real','2024-25 dollars (Seattle CPI)']],basis,k=>{basis=k;draw();})));
+  host.append(footer(['RAW','REGROUPED','CALCULATED'],['F1','F2','F3','F8','B1','B2','V4'],'OSPI F-196 actuals'));
+  draw();
+})();
+
+/* ===== View 5: non-student-facing staff ===== */
+(function(){
+  const host=$('#v5'); let unit='comp', basis='real', yr='2025-26', bus=false;
+  const T=[['1_non_student_facing','Total non-student-facing: coded to the district location, excluding bus drivers and itinerant student services','var(--c8)'],['2_office_staff_plus_managers_super','District office staff + managers + superintendent','var(--c4)'],['3_managers_super','Managers + superintendent (by job title)','var(--c2)']];
+  host.append(el('h2',{},'Non-student-facing staff: three ways to draw the line'),
+   el('p',{class:'muted small'},'Rule (G8, G9): anyone coded to the district location is non-student-facing, except bus drivers and itinerant student services (speech-language, therapists, nurses, counselors, psychologists, social workers), who are student-facing wherever they are coded; anyone coded to a school building is not. The widest line is everyone who meets that rule. The middle line keeps only office, technical and professional staff plus managers and the superintendent. The narrowest keeps managers and the superintendent.'),
+   el('p',{class:'small'},el('b',{},'Why do the first two lines start in 2022-23? '),'They depend on where each person is coded. The S-275 building column only exists from 2022-23; earlier files record job titles but not buildings. "Managers + superintendent" is identified by job title alone, so it covers all years. Community directories exist for a few earlier years (2020-21 is on the chart as dots), but they cover only part of the district side, so we have not used them to extend the lines.'));
+  const ctl=el('div',{class:'controls'}), lg=el('div',{class:'legend'}), ch=el('div',{class:'rel'}), tb=el('div'), fl=el('div'), lt=el('div'); host.append(ctl,lg,ch,tb,el('h3',{class:'s'},'Was the drop in the widest line a cut, or a change in coding?'),fl,el('h3',{class:'s'},'Job titles coded to the district location (bus drivers and itinerant student services are not in the widest line)'),el('div',{class:'controls',id:'v5c'}),lt);
+  const f=y=>basis==='nominal'?1:factor(y);
+  function draw(){
+    const mk=(k,n,c,extra={})=>({name:n,color:c,dots:true,values:YEARS_S.map(y=>{ const t=TIER[k]; if(!t) return null; if(unit==='fte') return t.fte[y]??null; if(unit==='per100') return t.fte[y]!=null?t.fte[y]/enr()[y]*100:null; return t.comp[y]!=null?t.comp[y]*f(y):null; }),tipFmt:unit==='fte'?fmt.f1:unit==='per100'?fmt.f2:fmt.usdM2,...extra});
+    const ser=T.map(([k,n,c])=>mk(k,n,c));
+    if(bus) ser.push(mk('0_district_location_incl_bus','Everyone coded to the district location, including bus drivers','var(--c8)',{dashed:true}));
+    ser.push(mk('2b_plus_community_listed_coded_to_school','Middle line plus people the community list places in the district building but S-275 codes to a school (EXTERNAL; 2023-24, 2025-26 only)','var(--c5)',{pointsOnly:true}));
+    if(unit==='comp') ser.push({name:'Community group’s district-office list, their totals (EXTERNAL; includes people at schools and not found in S-275)',color:'var(--c7)',pointsOnly:true,tipFmt:fmt.usdM2,values:YEARS_S.map(y=>{const r=DATA.central.C&&DATA.central.C[y]; return r?r.dollars*f(y):null;})});
+    lineChart(ch,{years:YEARS_S,series:ser,yFmt:unit==='comp'?fmt.usdM:unit==='fte'?fmt.int:fmt.f1,yMin:0,h:340});
+    staticLegend(lg,ser);
+    const rows=[]; const all=[...T,...(bus?[['0_district_location_incl_bus','Everyone coded to the district location, including bus drivers']]:[]),['2b_plus_community_listed_coded_to_school','Middle line plus community-listed people coded to a school (EXTERNAL)']];
+    all.forEach(([k,n])=>{ const t=TIER[k]; if(!t) return; rows.push([n+' (total compensation'+(basis==='real'?', 2024-25 dollars':'')+')',...YEARS_S.map(y=>t.comp[y]!=null?fmt.usdM2(t.comp[y]*f(y)):'')],[n+' (FTE)',...YEARS_S.map(y=>t.fte[y]!=null?fmt.f1(t.fte[y]):'')],[n+' (people)',...YEARS_S.map(y=>t.people[y]!=null?t.people[y]:'')]); });
+    tb.replaceChildren(fold('Data table and notes',table(['',...YEARS_S],rows), el('p',{class:'small muted'},'Total compensation is salary plus insurance plus mandatory benefits as reported in S-275 (S3). Lines are approximately nested: a few titled managers are coded to a school, so the narrowest line is not strictly inside the others.')));
+    const F=DATA.district_location_flow; const st=[['still_coded_to_district','Still coded to the district location'],['now_coded_to_a_school_only','Now coded only to a school building'],['not_on_s275_list_that_year','Not on the S-275 list that year (left, name change, or paid elsewhere)']];
+    const ty=['2023-24','2024-25','2025-26'];
+    fl.replaceChildren(el('p',{class:'small muted'},'Take everyone in the widest line in 2022-23: '+fmt.f1(TIER['1_non_student_facing'].fte['2022-23'])+' FTE. Where do those same people appear later? People are linked across years by name (P1, S10); counts under 5 are hidden.'),
+      fold('Data table',table(['Where those people are',...ty.map(y=>y+' (people, FTE they held in 2022-23)')],st.map(([k,n])=>[n,...ty.map(y=>{const r=F.find(x=>x.to===y&&x.status===k); return r?(r.people+' people, '+(r.fte==null?'':fmt.f1(r.fte)+' FTE')):'';})]),[0])),
+      el('p',{class:'small muted'},'So part of the decline in the widest line is people who were recoded to school buildings, not positions removed. It cannot tell us whether those people changed jobs or only their coding.'));
+    const L=DATA.district_location_titles.filter(r=>r.year===yr).sort((a,b)=>b.fte-a.fte);
+    lt.replaceChildren(fold('Data table',table(['S-275 job title','Our group','In the widest line?','FTE','People'],L.map(r=>[r.title,label(r.group),r.title==='Operator'?'No (bus drivers)':(['Spch.-Lang. Path./Audio.','Occupational Therapist','Physical Therapist','Psychologist','Nurse','Social Worker','Counselor'].includes(r.title)?'No (itinerant student services)':'Yes'),fmt.f1(r.fte),r.people]),[0,1,2])));
+  }
+  ctl.append(el('label',{},'Show ',seg([['comp','Total compensation'],['fte','FTE'],['per100','FTE per 100 students']],unit,k=>{unit=k;sync();draw();})),el('label',{id:'v5d'},'Dollars ',seg([['real','2024-25 dollars (Seattle CPI)'],['nominal','As reported']],basis,k=>{basis=k;draw();})),el('label',{},'Bus drivers ',seg([['no','Not shown'],['yes','Add the line including them']],'no',k=>{bus=k==='yes';draw();})));
+  function sync(){ $('#v5d').style.display=unit==='comp'?'':'none'; }
+  const s=el('select',{},YEARS_S.filter(y=>y>='2022-23').map(o=>el('option',{value:o},o))); s.value=yr; s.addEventListener('change',()=>{yr=s.value;draw();}); $('#v5c').append(el('label',{},'Year ',s));
+  host.append(footer(['REGROUPED','CALCULATED','INFERRED','EXTERNAL'],['G8','G9','G10','C5','S3','S9','S10','P4','B1','V4'],'OSPI S-275; community spreadsheets'));
+  sync(); draw();
+})();
+
+
+/* ===== Definitions tab ===== */
+(function(){
+  const h1=$('#d1'), h2=$('#d2'); let m='fte';
+  h1.append(el('h2',{},'Staffing definitions: every S-275 job title and where it sits'),
+   el('p',{class:'muted small'},'The S-275 personnel report lists each employee assignment under a state job title (duty). These are the 33 titles Olympia uses, with the state handbook’s meaning where the handbook says so, the technical category used in the first version of this page, and the conventional group used in the charts. The 2018-19 and 2026-27 handbooks define every title identically.'));
+  const ctl=el('div',{class:'controls'}), tb=el('div'); h1.append(ctl,tb);
+  const side=g=>{const p=DATA.group_meta[g]; return p?label(p[0]):''};
+  function draw(){
+    const rows=DATA.titles.map(t=>{ const o=DATA.staffing.title[t.title]||{}; const s=(m==='fte'?o.fte:o.headcount)||{};
+      return [t.title,label(t.category),side(t.group)+' / '+label(t.group).split(' (')[0],t.note,...YEARS_S.map(y=>s[y]==null?'':(m==='fte'?fmt.f1(s[y]):fmt.int(s[y])))]; });
+    tb.replaceChildren(table(['S-275 job title','Technical category','Conventional group','What the handbook says / note',...YEARS_S],rows,[0,1,2,3]));
+  }
+  ctl.append(el('label',{},'Show ',seg([['fte','FTE'],['people','People']],m,k=>{m=k;draw();})));
+  h1.append(el('p',{class:'small muted'},'People are counted once per title; a person with assignments under two titles appears under both, so the people columns do not sum to a total. Pay is shown nowhere on this page yet. Counts under 5 are shown as reported here because titles only carry FTE and counts, not individuals’ pay.'));
+  h1.append(footer(['RAW','REGROUPED'],['G1','G2','G3','S1','S2','S4','S5','S6','S8','S10'],'OSPI S-275; S-275 handbooks 2018-19 and 2026-27'));
+  draw();
+  h2.append(el('h2',{},'Building-based groups (2022-23 on): where people are coded'),
+   el('p',{class:'muted small'},'The S-275 file records the building only from 2022-23. Rule (G8): a row coded to the district location is district, except bus drivers (operators, student-facing support staffing) and itinerant student services (speech-language, therapists, nurses, counselors, psychologists, social workers, student-facing). A row coded to a school keeps its job-title group; school-coded Office/Clerical is school office staff and school-coded Technical/Professional is school technical. Superintendent and manager titles stay district wherever coded. Before 2022-23 only the job-title view is possible.'));
+  const rows=['front_office','school_clerical','classroom_teachers','paraeducators','student_services','support_staffing','school_tech_prof','super','managers','district_office_staff','district_other_coded'].map(g=>[label(g),...YEARS_S.map(y=>{const v=((GR.located[g]||{}).fte||{})[y]; return v==null?'':fmt.f1(v);})]);
+  rows.push(['All staff (job-title basis, all years)',...YEARS_S.map(y=>fmt.f1((DATA.staffing.category.all_staff.fte||{})[y]))]);
+  h2.append(table(['Where they work',...YEARS_S],rows),el('p',{class:'small muted'},'"District other coded" = people coded to the district location who are not managers, not office/technical/professional, not bus drivers and not itinerant student services: for example trades, laborers, custodial and food service workers, aides, library media specialists and other support personnel. Option not taken: estimating the split before 2022-23.'),footer(['REGROUPED','INFERRED'],['G8','S9'],'OSPI S-275'));
+})();
+
+
+/* ===== Fact checks tab ===== */
+(function(){
+  const a=$('#f1'), b=$('#f2'), c=$('#f3'); let basis='nominal';
+  a.append(el('h2',{},'Fact check: the community group’s staff lists against state payroll data'),
+   el('p',{class:'muted small'},'A community group compiled lists of staff in the district office building (Knox) for 2020-21, 2023-24 and 2025-26, with pay. We tested whether their totals add up, and whether the people and pay appear in the state S-275 payroll report.'));
+  const M=DATA.community_match;
+  a.append(table(['Year','People listed','Their total compensation','Found in S-275','Found, % of listed','Found people whose salary matches S-275 (within 1%)','Not found (people)','Not found: their compensation'],
+    M.map(r=>[r.school_year,r.listed_rows,fmt.usd(r.listed_total_compensation),r.matched_to_s275,fmt.pct1(r.share_matched),r.pay_within_1pct_of_s275,r.unmatched_rows,fmt.usd(r.unmatched_compensation)])),
+   el('p',{class:'small'},'Their totals are the sum of their rows, and for every person we could find, salary agrees with S-275 (usually to the dollar). The people we could not find (4 to 10 per year) may be name changes, spelling differences, or people paid outside this report; we did not chase them.'));
+  const RC=DATA.community_recon; const yrs=['2023-24','2025-26'];
+  const lines=[...new Set(RC.map(r=>r.line))];
+  const cell=(y,l)=>{const r=RC.find(x=>x.year===y&&x.line===l); return r?(r.people+' people'+(r.fte!=null?', '+fmt.f1(r.fte)+' FTE':'')+(r.comp!=null?', '+fmt.usdM2(r.comp):'')):'';};
+  b.append(el('h2',{},'Why our district-side numbers differ from the community list'),
+   el('p',{class:'muted small'},'Their list is a building directory. Ours comes from where S-275 codes each person. We matched the two, person by person (locally; only counts and dollars are kept). The tables show what each includes that the other does not. The building column exists from 2022-23, so only 2023-24 and 2025-26 can be compared.'),
+   el('h3',{class:'s'},'The community list, by where S-275 codes those people'),table(['',...yrs],lines.filter(l=>l.startsWith('Community')).map(l=>[l.replace('Community list: ',''),...yrs.map(y=>cell(y,l))]),[0]),
+   el('h3',{class:'s'},'Everyone S-275 codes to the district location, by whether the community list includes them'),table(['',...yrs],lines.filter(l=>l.startsWith('District-coded')).map(l=>[l.replace('District-coded rows in S-275: ','').replace('District-coded rows: ','').replace('District-coded rows not on the community list: ','Not on their list: '),...yrs.map(y=>cell(y,l))]),[0]),
+   el('p',{class:'small'},el('b',{},'What this shows. '),'(1) Most of their list (94 of 110 in 2023-24; 85 of 102 in 2025-26) is coded to the district location in S-275. (2) A smaller group (9 and 7 people) is coded to a school in S-275 but sits in their district-building list; that is the case you described, staff coded to student-facing jobs but doing administrative work, and the chart shows it as a separate overlay. (3) S-275 also codes to the district location many people their list does not include: bus drivers, trades, laborers, custodial and food service workers, and aides and therapists. Those are in our widest line (except bus drivers) and not in their list. (4) Compare like with like: in 2023-24 to 2025-26 our middle line grew about 2 percent in dollars and their list about 1 percent. Their rise from $11.4M (2020-21) to $14.3M (2023-24) covers years our building-based lines cannot reach, and it includes the pay raises in between and 11 more listed people.'),
+   footer(['EXTERNAL','CALCULATED'],['C1','C2','C4','C5','G8','S9'],'community spreadsheets (Knox directory); OSPI S-275'));
+  const comp=DATA.community_composition; const ys3=M.map(r=>r.school_year); const groups=['managers','super','office_tech_prof','student_services','classroom_teachers','paraeducators','support_staffing','front_office'];
+  const rows=groups.map(g=>[label(g),...ys3.map(y=>{const r=comp.find(x=>x.year===y&&x.group===g); return r?r.rows+(r.comp!=null?' ('+fmt.usdM2(r.comp)+')':''):'';})]);
+  b.append(el('h3',{class:'s'},'The community list by the S-275 job title shown in their entries'),table(['S-275 job title group',...ys3],rows),
+    el('p',{class:'small muted'},'These are titles as listed, not an assessment of what the people do. Some hold titles that look student-facing (social worker, therapist, instructional coach) but are in a district-building list. On this page they are treated by building, not title: coded to the district location means district (G8).'));
+  const defs=[['A','A: Spending on general administration activities (F-196 activities 11-15)','var(--c1)'],['B','B: Staff with district administrator titles (11x-13x), total compensation','var(--c2)'],['B2','B2: B plus classified directors/supervisors (99y), total compensation','var(--c3)'],['D','D: Everyone coded to the district location, including bus drivers (2022-23 on), total compensation','var(--c4)'],['C','C: Community group’s district-office list, their totals','var(--c5)']];
+  const Cm=DATA.central; const yy=YEARS_F.concat(['2025-26']); const f=y=>basis==='nominal'?1:factor(y);
+  const ch=el('div',{class:'rel'}), tb=el('div'), leg=el('div',{class:'legend'}), ctl=el('div',{class:'controls'});
+  const series=defs.map(([id,n,col])=>({key:id,name:n,color:col,hidden:false,pointsOnly:id==='C'}));
+  function draw(){ const ser=series.map(s=>({...s,values:yy.map(y=>Cm[s.key]&&Cm[s.key][y]?Cm[s.key][y].dollars*f(y):null),tipFmt:fmt.usdM2}));
+    lineChart(ch,{years:yy,series:ser,yFmt:fmt.usdM,yMin:0,h:320});
+    tb.replaceChildren(fold('Data table',table(['Measure',...yy],defs.map(([id,n])=>[n,...yy.map(y=>{const r=Cm[id]&&Cm[id][y]; if(!r) return ''; const e=[]; if(r.fte!=null) e.push(fmt.f1(r.fte)+' FTE'); if(r.people!=null) e.push(r.people+' people'); if(r.pct) e.push(r.pct); return fmt.usdM2(r.dollars*f(y))+(e.length?' ('+e.join(', ')+')':'');})]))));
+    legend(leg,series,draw); }
+  ctl.append(el('label',{},'Dollars ',seg([['nominal','As reported'],['real','2024-25 dollars (Seattle CPI)']],basis,k=>{basis=k;draw();})));
+  c.append(el('h2',{},'Fact check: five different "central administration" measures'),el('p',{class:'muted small'},'These are different questions with different answers; none is the district’s own 4.88%. Measure A is spending on general administration activities across all programs; B, B2, D and C are staff total compensation (salary + insurance + mandatory benefits).'),ctl,leg,ch,tb,
+    el('p',{class:'small'},el('b',{},'District’s own figure: '),'4.88% (Oct. 22 FAQ). The year, the base (general fund or another total) and the list of activities are not stated, so it is not placed on the chart and could not be reproduced by any grouping we tried. The basis has been requested.'),
+    footer(['RAW','REGROUPED','EXTERNAL','CALCULATED'],['F7','S4','S6','S9','C1','C2','C3','C4','B1','V4'],'OSPI F-196; OSPI S-275; community spreadsheets; district FAQ (Oct. 22)'));
+  draw();
+})();
+
+
+/* ===== Pay tab ===== */
+(function(){
+  const P=DATA.pay, SP=P.super, GOV=P.ext.governor_salary, SPI=P.ext.spi_salary, AH=P.ext.agency_head_pay, AHL=P.ext.agency_head_pay_low;
+  const root=$('#pa0'); const Y=YEARS_S; const cum=(o,ys)=>ys.reduce((a,y)=>a*(1+(o[y]||0)),1);
+  const gwaIdx={}; (()=>{let v=100; Y.forEach((y,i)=>{ if(i>0) v*=1+(P.gwa[y]||0); gwaIdx[y]=v; });})();
+  const cpiG=P.cpi['2025-26']/P.cpi['2015-16']-1;
+  const SECTP=[['District administration (not student-facing)',['district_admin','district_managers','superintendent']],
+    ['Schools: job titles that work in school buildings',['classroom_teachers','paraeducators','student_services','principals_vps','custodial_food_service','trades_laborers']],
+    ['Office and technical staff, split by where they are coded (2022-23 on)',['office_clerical_school','office_clerical_district','technical_professional_school','technical_professional_district']],
+    ['Student-facing, outside school buildings',['bus_drivers']],
+    ['Office and technical staff, schools and district office combined (all years)',['office_clerical','technical_professional']]];
+  const grp=SECTP.flatMap(x=>x[1]); const oldGrp=['classroom_teachers','paraeducators','student_services','principals_vps','district_managers','office_clerical','technical_professional','custodial_food_service','bus_drivers','trades_laborers','superintendent'];
+  const PL={district_admin:'Superintendent, deputy and district managers combined',office_clerical_school:'Office and clerical: at schools',office_clerical_district:'Office and clerical: district office',technical_professional_school:'Technical and professional: at schools',technical_professional_district:'Technical and professional: district office',office_clerical:'Office and clerical (schools and district office combined)',technical_professional:'Technical and professional (schools and district office combined)'};
+  const pl=k=>PL[k]||label(k);
+  const gwrIdx={}; (()=>{let v=100; Y.forEach((y,i)=>{ if(i>0) v*=1+(P.gwr[y]||0); gwrIdx[y]=v; });})(); const gwrG=gwrIdx['2025-26']/100-1;
+  const dA=P.base.district_admin, dAG=dA['2025-26']/dA['2015-16']-1, dAp=P.peer.district_admin['2025-26'];
+  const gr=g=>P.base[g]['2025-26']/P.base[g]['2015-16']-1;
+  const sup=y=>SP[y].base/SP[y].fte, ratio=y=>sup(y)/GOV[y]-1;
+  const peerS=P.peer.superintendent['2025-26'], pe24=P.peer.superintendent['2024-25'];
+  const H=P.high; const hv=(t,y)=>H[t][y]==null?0:H[t][y];
+  const mg=P.peer.district_managers['2025-26'], tch=P.peer.classroom_teachers['2025-26'];
+  const ord=v=>{const n=Math.round(v),q=n%100,u=n%10; return n+((q>=11&&q<=13)?'th':u===1?'st':u===2?'nd':u===3?'rd':'th');};
+  const note=(...ps)=>el('details',{class:'note'},el('summary',{class:'small muted',style:'cursor:pointer'},'About this figure'),...ps.map(x=>el('p',{class:'small muted',style:'margin:4px 0'},x)));
+  const rg=(g,y)=>P.base[g]?P.base[g][y]??null:null;
+  const AG=['classroom_teachers','paraeducators','student_services','principals_vps','district_admin','office_clerical','technical_professional','custodial_food_service','bus_drivers','trades_laborers'];
+  const cprice=P.cpi['2025-26']/P.cpi['2015-16'], crep=gwrIdx['2025-26']/100;
+  const AR=AG.map(g=>{ const a=rg(g,'2015-16'), z=rg(g,'2025-26'), fte=P.fte[g]['2025-26']; return {g,a,z,fte,act:z*fte,pr:a*cprice*fte,rp:a*crep*fte}; });
+  const AS=k=>AR.reduce((s,r)=>s+r[k],0), ARow=g=>AR.find(r=>r.g===g);
+  const gl=AG.map(gr), gmin=Math.min(...gl), gmax=Math.max(...gl), tchg=gr('classroom_teachers');
+  root.append(el('h2',{},'Key points'),
+   el('p',{class:'muted small'},'Base pay is contract pay per full-time equivalent (FTE), without stipends or one-time payments. Sources: OSPI S-275, state salary schedules and bargaining agreements, Seattle-area CPI.'),
+   el('ul',{class:'kp'},
+    el('li',{},`From 2015-16 to 2025-26, average base pay per FTE rose ${fmt.pct1(gmin)} to ${fmt.pct1(gmax)} depending on the group. Seattle-area prices rose about ${fmt.pct1(cpiG)}; the represented state employees’ pay schedule rose ${fmt.pct1(gwrG)}, not counting step increases.`),
+    el('li',{},`Classroom teachers: average base pay ${fmt.usd(rg('classroom_teachers','2025-26'))} in 2025-26, up ${fmt.pct1(tchg)}. The statewide median district’s classroom teacher pay rose ${fmt.pct1(P.peer.classroom_teachers['2025-26'].state_median/P.peer.classroom_teachers['2015-16'].state_median-1)} over the same years.`),
+    el('li',{},`Base payroll in 2025-26 is about ${fmt.usdM(AS('act')-AS('pr'))} above what it would be had average pay per FTE grown only with prices since 2015-16 (about ${fmt.usdM(AS('act')-AS('rp'))} above the state schedule). Classroom teachers are ${fmt.usdM(ARow('classroom_teachers').act-ARow('classroom_teachers').pr)} of the first figure; the superintendent, deputy and district managers together ${fmt.usdM(ARow('district_admin').act-ARow('district_admin').pr)}.`),
+    el('li',{},`Olympia’s superintendent base pay is at the ${ord(peerS.pct)} percentile of Washington superintendents and the ${ord(peerS.sim_pct)} percentile among ${peerS.sim_n} districts of similar size (2025-26).`))
+  );
+  /* dollars chart + aggregate dollars (PY8, PY9) */
+  const s5=$('#pa5'); let real5=false;
+  const DS=[['Superintendent (one position)','var(--c2)',y=>sup(y),{w:3}],['Principals and vice principals','var(--c6)',y=>rg('principals_vps',y),{}],['District managers and directors (average)','var(--c5)',y=>rg('district_managers',y),{}],['Classroom teachers (average)','var(--c1)',y=>rg('classroom_teachers',y),{}],['Paraeducators (average)','var(--c3)',y=>rg('paraeducators',y),{}],['State example: General Service range 65, top step (topped out; schedule raises only)','var(--c8)',y=>P.r65.top[y]??null,{dashed:true,w:3}],['State example: same range, bottom step','var(--c8)',y=>P.r65.a[y]??null,{dashed:true,w:3}]];
+  s5.append(el('h2',{},'What these jobs pay, in dollars'),el('p',{class:'muted small'},'Average base pay per FTE for each group, in dollars, next to one example rung on the state salary schedule. Click a name to show or hide a line.'),note('Olympia lines are average base pay per FTE for each group; the superintendent is a single position (E4).','The state example is range 65 on the state General Service salary schedule, which is near $100,000 today. It is an example of a mid-career professional rung, not an average of state employees, and the range number is not tied to a job title. A person at the top step receives only the schedule raises.'));
+  const c5=el('div',{class:'controls'}), lg5=el('div',{class:'legend'}), ch5=el('div',{class:'rel'}), tb5=el('div'); s5.append(c5,lg5,ch5,tb5);
+  const dsel=el('select',{},el('option',{value:'n'},'Dollars as paid'),el('option',{value:'r'},'2024-25 dollars (Seattle CPI)')); dsel.addEventListener('change',()=>{real5=dsel.value==='r';b5();}); c5.append(el('label',{},'Show ',dsel));
+  let ser5=[];
+  function b5(){ const off=new Set(ser5.filter(x=>x.hidden).map(x=>x.name)); const f=y=>real5?factor(y):1;
+    ser5=DS.map(([name,color,fn,o])=>({key:name,name,color,values:Y.map(y=>{const v=fn(y); return v==null?null:v*f(y);}),dots:true,tipFmt:fmt.usd,...o,hidden:off.size?off.has(name):!!o.hidden}));
+    legend(lg5,ser5,r5); r5();
+    tb5.replaceChildren(fold('Data table and notes',table(['',...Y],ser5.map(x=>[x.name,...x.values.map(v=>v==null?'':fmt.usd(v))])),note('Olympia figures are October base pay rates per FTE from S-275 (a group average moves with who is hired and retires). State schedule values are annual salary at the end of each school year, so 2018-19 includes the January 2019 raise; 2024-25 and 2025-26 are the 2023-24 schedule plus the 3% raises of July 2024 and July 2025. The state schedule also has extra pay for some job classes that is not shown.'))); }
+  function r5(){ const vis=ser5.filter(x=>!x.hidden).flatMap(x=>x.values.filter(v=>v!=null)); lineChart(ch5,{years:Y,series:ser5,yFmt:v=>'$'+Math.round(v/1000)+'k',yMin:0,yMax:Math.max(...vis)*1.05,h:340}); }
+  b5();
+  const arows=AR.map(r=>[pl(r.g),fmt.f1(r.fte),fmt.usd(r.a),fmt.usd(r.z),fmt.usdM(r.act),fmt.usdM(r.pr),fmt.usdM(r.act-r.pr),fmt.usdM(r.rp),fmt.usdM(r.act-r.rp)]);
+  arows.push(['All ten groups','','','',fmt.usdM(AS('act')),fmt.usdM(AS('pr')),fmt.usdM(AS('act')-AS('pr')),fmt.usdM(AS('rp')),fmt.usdM(AS('act')-AS('rp'))]);
+  s5.append(el('h3',{},'Base pay in total dollars, 2025-26'),el('p',{class:'muted small'},'2025-26 base payroll by group, compared with the same payroll had average pay per FTE grown only with Seattle-area prices, or only with state schedule raises (+'+((crep-1)*100).toFixed(1)+'%), since 2015-16. Dollars as paid; salary only.'),note('Base payroll is average base pay per FTE times FTE. These are comparisons, not findings of overpayment: group averages also reflect experience, degrees, and who was hired or left, and teacher pay is largely set by state funding. Benefits are not included.'),fold('Data table',table(['Group','FTE','Avg base 2015-16','Avg base 2025-26','Base payroll 2025-26','If grown with prices','Difference','If grown with state schedule','Difference'],arows)),note('Superintendent, deputy and district managers are combined in one line (PY5). The ten groups are mutually exclusive; the superintendent alone is not shown here.'),footer(['CALCULATED','EXTERNAL'],['PY1','PY3','PY5','PY7','PY8','PY9','E4'],'OSPI S-275; WFSE General Government agreements; Seattle CPI'));
+  /* growth chart */
+  const s2=$('#pa2'); let g='district_admin';
+  s2.append(el('h2',{},'Pay growth against prices, other districts, and state employees'),el('p',{class:'muted small'},'Each line shows percent change since the first year with data (+50% means 50 percent higher). Click a name to show or hide a line.'),note('Olympia and district lines are average base pay per FTE for the group; the price and state-raise lines are rates that apply to everyone.','Group averages move with who is hired and who retires, so they are not raises.'));
+  const c2=el('div',{class:'controls'}), lg2=el('div',{class:'legend'}), ch2=el('div',{class:'rel'}), tb2=el('div'); s2.append(c2,lg2,ch2,tb2);
+  const sel=el('select',{},SECTP.map(([t,ks])=>el('optgroup',{label:t},ks.map(k=>el('option',{value:k},pl(k)))))); sel.value=g; sel.addEventListener('change',()=>{g=sel.value;build();}); c2.append(el('label',{},'Group ',sel));
+  let gser=[]; const off=new Set(['nonrep']);
+  const cumR=(f,ib)=>Y.map((y,i)=>{ if(i<ib) return null; let v=1; for(let j=ib+1;j<=i;j++){ const r=f(Y[j]); if(r==null) return null; v*=1+r; } return v-1; });
+  const rel=(vals,ib)=>{ const b=vals[ib]; return vals.map((v,i)=>(v==null||b==null||i<ib)?null:v/b-1); };
+  function build(){
+    gser.forEach(x=>{ if(x.hidden) off.add(x.key); else off.delete(x.key); });
+    const ol=Y.map(y=>P.base[g][y]??null); const ib=ol.findIndex(v=>v!=null), b0=Y[ib];
+    const pe=P.peer[g]||{}, st=Y.map(y=>(pe[y]||{}).state_median??null), si=Y.map(y=>(pe[y]||{}).sim_median??null);
+    const cont=cumR(y=>(P.cont[g]&&P.cont[g][y]!=null)?P.cont[g][y]:null,ib);
+    const stepMult=i=>Math.min(Math.pow(1+P.step.two_step,i-ib),1+P.step.a_to_l);
+    const gwrC=cumR(y=>P.gwr[y]??0,ib), gwaC=cumR(y=>P.gwa[y]??0,ib);
+    const defs=[['ol','Olympia: average base pay per FTE','var(--c1)',rel(ol,ib),{w:3}],
+      ['cont','Olympia: typical raise for the same people, compounded (includes steps)','var(--c1)',cont,{dashed:true}],
+      ['st','Statewide median district, same job titles','var(--c2)',st[ib]!=null?rel(st,ib):Y.map(()=>null),{dashed:true}],
+      ['si','Similar-size districts, median','var(--c5)',si[ib]!=null?rel(si,ib):Y.map(()=>null),{dashed:true}],
+      ['cpi','Seattle-area consumer prices','var(--c8)',Y.map((y,i)=>i<ib?null:P.cpi[y]/P.cpi[b0]-1),{}],
+      ['rep','Represented state employee: pay schedule raises only (topped out)','var(--c3)',gwrC,{}],
+      ['steps','Represented state employee, bottom step: schedule raises plus steps (illustration)','var(--c3)',gwrC.map((v,i)=>v==null?null:(1+v)*stepMult(i)-1),{dashed:true}],
+      ['nonrep','Non-represented state employees: pay schedule raises only','var(--c4)',gwaC,{}]];
+    gser=defs.filter(d=>d[3].some(v=>v!=null)).map(([key,name,color,values,o])=>({key,name,color,values,dots:true,tipFmt:fmt.pct1,hidden:off.has(key),...o}));
+    legend(lg2,gser,render); render();
+    const rows=[['Olympia average base pay per FTE',...Y.map(y=>P.base[g][y]==null?'':fmt.usd(P.base[g][y]))],['Olympia, % change from prior year',...Y.map((y,i)=>i&&P.base[g][y]&&P.base[g][Y[i-1]]?fmt.pct(P.base[g][y]/P.base[g][Y[i-1]]-1):'')],['Same people, median raise',...Y.map(y=>P.cont[g]&&P.cont[g][y]!=null?fmt.pct(P.cont[g][y]):'')],['Seattle consumer prices, % change',...Y.map((y,i)=>i?fmt.pct(P.cpi[y]/P.cpi[Y[i-1]]-1):'')],['Represented state employees: schedule raise',...Y.map((y,i)=>i&&P.gwr[y]!=null?fmt.pct(P.gwr[y]):'')],['Non-represented state employees: schedule raise',...Y.map((y,i)=>i&&P.gwa[y]!=null?fmt.pct(P.gwa[y]):'')]];
+    tb2.replaceChildren(fold('Data table and notes',table(['',...Y],rows),note('The “same people” row follows individuals who held the same kind of job in both years and takes the median change in base pay per FTE (counts under 5 are hidden); it includes step increases. State schedule raises exclude steps; the “bottom step” line adds the contract’s two-steps-a-year rule, using the average step size in the 2023-25 salary schedule, up to step L. It is an illustration of one career path, not an average of state employees. Office, clerical, technical and professional staff can be viewed by building only from 2022-23, when the S-275 started reporting buildings; state raises are the bargaining agreements’ schedule increases (WFSE General Government; the 2025-26 figure is from OFM’s summary). State raises for July 2020 and July 2021 are marked partial for non-represented employees (B5).')));
+  }
+  function render(){ const vis=gser.filter(x=>!x.hidden).flatMap(x=>x.values.filter(v=>v!=null)); lineChart(ch2,{years:Y,series:gser,yFmt:v=>Math.round(v*100)+'%',yMin:Math.min(0,...vis)-.02,yMax:Math.max(0,...vis)+.03,h:340,zeroLine:true}); }
+  build(); s2.append(footer(['CALCULATED','INFERRED','EXTERNAL'],['PY1','PY2','PY3','PY5','PY6','PY7','B1','B2','B3','B4','B5','E4','S3','S10'],'OSPI S-275 (all Washington districts); Seattle CPI; WFSE General Government agreements; OFM'));
+  /* peers */
+  const s3=$('#pa3'); let py='2025-26';
+  s3.append(el('h2',{},'How Olympia compares with other districts'),el('p',{class:'muted small'},'Base pay per FTE for the same S-275 job titles in every Washington district. Percentile = share of other districts whose average is lower. "Similar-size" districts have total staff FTE between half and double Olympia’s.'));
+  const c3=el('div',{class:'controls'}), tb3=el('div'); s3.append(c3,tb3);
+  const ysel=el('select',{},Y.map(y=>el('option',{value:y},y))); ysel.value=py; ysel.addEventListener('change',()=>{py=ysel.value;draw3();}); c3.append(el('label',{},'Year ',ysel));
+  function draw3(){ tb3.replaceChildren(table(['Group','Olympia','Statewide median','Percentile (statewide)','Similar-size median','Percentile (similar-size)','Districts compared (statewide / similar)'],grp.filter(k=>P.peer[k]).map(k=>{const p=P.peer[k]&&P.peer[k][py]; return p?[pl(k),p.olympia==null?'under 5 people':fmt.usd(p.olympia),fmt.usd(p.state_median),p.olympia==null?'':Math.round(p.pct)+'th',fmt.usd(p.sim_median),p.olympia==null?'':Math.round(p.sim_pct)+'th',p.state_n+' / '+p.sim_n]:[pl(k)];}),[0]),el('p',{class:'small muted'},'Groups split by building are not compared because other districts’ files do not mark a district office the same way. Districts with fewer than 5 people in a group are left out of that group’s comparison (superintendents: one per district). Job titles come from the S-275; titles are not identical across districts in practice, and pay includes experience and degree levels.')); }
+  draw3(); s3.append(footer(['CALCULATED'],['PY1','PY3','S1','S2','S4','E4'],'OSPI S-275 (all Washington districts)'));
+  /* high earners */
+  const s4=$('#pa4'); const th=[['150000','$150,000 or more'],['179700','$179,700 or more (lowest agency head on the OFM 2024 list)'],['200000','$200,000 or more'],['220644','$220,644 or more (12 agency heads, OFM 2024)']];
+  s4.append(el('h2',{},'District employees by base pay level (superintendent excluded)'),el('p',{class:'muted small'},'People with base pay per FTE at or above each level, among people working at least half time. Counts under 5 are shown as "<5". The levels are agency head pay points from the OFM 2024 table. The levels are reference points, not a like-for-like comparison with district jobs.'),fold('Data table',table(['Base pay per FTE',...Y],th.map(([k,n])=>[n,...Y.map(y=>{const v=P.high[k][y]; return v==null?0:v;})]),[0])),footer(['CALCULATED'],['PY4','P4','X1','S3'],'OSPI S-275; OFM agency head table'));
+  /* superintendent in context (last section) */
+  const s1=$('#pa1'); const PS=P.peer.superintendent;
+  s1.append(el('h2',{},'Superintendent pay in context'),el('p',{class:'muted small'},'Base pay per FTE of the Olympia superintendent (one position; no name is shown) next to superintendents in other Washington districts. Click a name to show or hide a line.'),
+    note('Olympia’s figure is the base salary of the superintendent position divided by its FTE (E4). The comparison groups are every Washington district’s superintendent position in S-275; “similar size” means total staff FTE between half and double Olympia’s (PY3).','For reference, published salary schedules for elected officials appear in the table below. The superintendent’s total reported salary, which includes extra pay, is also shown there.'));
+  const lg1=el('div',{class:'legend'}), ch1=el('div',{class:'rel'}), tb1=el('div'); s1.append(lg1,ch1,tb1);
+  const pv=(k)=>Y.map(y=>PS[y]&&PS[y][k]!=null?PS[y][k]:null);
+  const ser1=[{name:'Olympia superintendent',color:'var(--c1)',values:Y.map(y=>SP[y]?SP[y].base/SP[y].fte:null),dots:true,w:3,tipFmt:fmt.usd},{name:'Other districts, statewide: median',color:'var(--c2)',values:pv('state_median'),dots:true,tipFmt:fmt.usd},{name:'Other districts, statewide: 25th percentile',color:'var(--c2)',dashed:true,values:pv('state_p25'),tipFmt:fmt.usd},{name:'Other districts, statewide: 75th percentile',color:'var(--c2)',dashed:true,values:pv('state_p75'),tipFmt:fmt.usd},{name:'Similar-size districts: median',color:'var(--c5)',values:pv('sim_median'),dots:true,tipFmt:fmt.usd}];
+  lineChart(ch1,{years:Y,series:ser1,yFmt:v=>'$'+Math.round(v/1000)+'k',yMin:0,h:320}); staticLegend(lg1,ser1);
+  const yg=['2018-19','2019-20','2020-21','2021-22','2022-23','2023-24','2024-25','2025-26','2026-27'];
+  tb1.append(fold('Data table and notes',table(['',...Y],[['Olympia superintendent, base pay per FTE',...Y.map(y=>SP[y]?fmt.usd(SP[y].base/SP[y].fte):'')],['Olympia superintendent, total salary reported per FTE (includes extra pay)',...Y.map(y=>SP[y]?fmt.usd(SP[y].total/SP[y].fte):'')],['Statewide: 25th percentile',...pv('state_p25').map(v=>v==null?'':fmt.usd(v))],['Statewide: median',...pv('state_median').map(v=>v==null?'':fmt.usd(v))],['Statewide: 75th percentile',...pv('state_p75').map(v=>v==null?'':fmt.usd(v))],['Similar-size districts: median',...pv('sim_median').map(v=>v==null?'':fmt.usd(v))],['Olympia percentile, statewide',...pv('pct').map(v=>v==null?'':ord(v))],['Olympia percentile, similar-size districts',...pv('sim_pct').map(v=>v==null?'':ord(v))]]),
+    el('h3',{class:'s'},'For reference: published salary schedules'),table(['',...yg],[['Governor',...yg.map(y=>GOV[y]?fmt.usd(GOV[y]):'')],['State Superintendent of Public Instruction',...yg.map(y=>SPI[y]?fmt.usd(SPI[y]):'')]]),
+    el('p',{class:'small muted'},'Schedules are those in effect from July 1 of the school year’s starting year (governor 2018-19 from Sept. 1). 2026-27 shows the new governor amount; no S-275 for 2026-27 exists yet. The elected officials’ commission voted on Oct. 15, 2026 to recommend no raise for the next two years; that is not final until Feb. 2027. The 2024-25 superintendent position was reported at 0.97 FTE; figures are per full-time equivalent. Agency head pay from OFM’s July 2020 and October 2024 tables ranged from $149,028 (2020, lowest listed) to $251,208 (2024, highest excluding Health; Health $341,760).')),
+    footer(['RAW','EXTERNAL','CALCULATED'],['E4','PY3','P4'],'OSPI S-275; Washington Citizens’ Commission on Salaries for Elected Officials; OFM'));
+
+})();
+
+/* ===== Methods ===== */
+(function(){
+  const host=$('#entries');
+  Object.entries(ENTRIES).forEach(([id,e])=>{
+    host.append(el('details',{class:'entry',id:'e-'+id},el('summary',{},el('b',{},id+' '),e.what.slice(0,140)+(e.what.length>140?'…':''),el('span',{class:'muted small'},'  ['+e.status+']')),
+      el('p',{class:'small'},el('b',{},'What: '),e.what),el('p',{class:'small'},el('b',{},'Why / alternative: '),e.why),el('p',{class:'small'},el('b',{},'Effect: '),e.effect)));
+  });
+})();
+const startTab=(location.hash||'').slice(1); showTab(TABS.some(x=>x[0]===startTab)?startTab:'charts');
+</script>
+</body>
+</html>

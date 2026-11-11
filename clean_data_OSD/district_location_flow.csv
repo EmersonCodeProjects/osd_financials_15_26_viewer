@@ -1,0 +1,10 @@
+from_year,to_year,status,people,fte_in_2022_23,derivation,decision_ids
+2022-23,2023-24,still_coded_to_district,124,111.3,INFERRED,"G10,G11,P1,S10"
+2022-23,2023-24,now_coded_to_a_school_only,12,10.1,INFERRED,"G10,G11,P1,S10"
+2022-23,2023-24,not_on_s275_list_that_year,26,23.2,INFERRED,"G10,G11,P1,S10"
+2022-23,2024-25,still_coded_to_district,106,96.1,INFERRED,"G10,G11,P1,S10"
+2022-23,2024-25,now_coded_to_a_school_only,16,13.0,INFERRED,"G10,G11,P1,S10"
+2022-23,2024-25,not_on_s275_list_that_year,40,35.5,INFERRED,"G10,G11,P1,S10"
+2022-23,2025-26,still_coded_to_district,97,87.5,INFERRED,"G10,G11,P1,S10"
+2022-23,2025-26,now_coded_to_a_school_only,14,11.3,INFERRED,"G10,G11,P1,S10"
+2022-23,2025-26,not_on_s275_list_that_year,51,45.8,INFERRED,"G10,G11,P1,S10"

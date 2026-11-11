@@ -1,0 +1,42 @@
+school_year,measure_id,label,fte,people,dollars,dollars_basis,source,derivation,decision_ids,note
+2015-16,B,District administrator titles (11x-13x),11.5,12,1753420,total_compensation,S-275,REGROUPED,"S4,S6,C1",
+2015-16,B2,B plus classified Director/Supervisor (99y),27.88,30,3561567,total_compensation,S-275,REGROUPED,"S4,S6,C1",
+2016-17,B,District administrator titles (11x-13x),11.0,11,1652183,total_compensation,S-275,REGROUPED,"S4,S6,C1",
+2016-17,B2,B plus classified Director/Supervisor (99y),29.24,31,3684772,total_compensation,S-275,REGROUPED,"S4,S6,C1",
+2017-18,B,District administrator titles (11x-13x),13.07,14,2076604,total_compensation,S-275,REGROUPED,"S4,S6,C1",
+2017-18,B2,B plus classified Director/Supervisor (99y),30.89,32,4118699,total_compensation,S-275,REGROUPED,"S4,S6,C1",
+2018-19,B,District administrator titles (11x-13x),11.68,12,2124411,total_compensation,S-275,REGROUPED,"S4,S6,C1",
+2018-19,B2,B plus classified Director/Supervisor (99y),31.07,32,4516430,total_compensation,S-275,REGROUPED,"S4,S6,C1",
+2019-20,B,District administrator titles (11x-13x),11.01,12,2199834,total_compensation,S-275,REGROUPED,"S4,S6,C1",
+2019-20,B2,B plus classified Director/Supervisor (99y),29.83,32,4816083,total_compensation,S-275,REGROUPED,"S4,S6,C1",
+2020-21,B,District administrator titles (11x-13x),11.0,11,2115942,total_compensation,S-275,REGROUPED,"S4,S6,C1",
+2020-21,B2,B plus classified Director/Supervisor (99y),30.0,30,4820150,total_compensation,S-275,REGROUPED,"S4,S6,C1",
+2021-22,B,District administrator titles (11x-13x),12.71,13,2602720,total_compensation,S-275,REGROUPED,"S4,S6,C1",
+2021-22,B2,B plus classified Director/Supervisor (99y),31.7,32,5418505,total_compensation,S-275,REGROUPED,"S4,S6,C1",
+2022-23,B,District administrator titles (11x-13x),12.98,13,2766234,total_compensation,S-275,REGROUPED,"S4,S6,C1",
+2022-23,B2,B plus classified Director/Supervisor (99y),32.75,33,6040668,total_compensation,S-275,REGROUPED,"S4,S6,C1",
+2022-23,D,Everyone at district location code 1035,196.03,238,23442012,total_compensation,S-275,REGROUPED,"S9,C1",location column exists from 2022-23 only
+2023-24,B,District administrator titles (11x-13x),11.04,12,2423912,total_compensation,S-275,REGROUPED,"S4,S6,C1",
+2023-24,B2,B plus classified Director/Supervisor (99y),32.12,35,5915015,total_compensation,S-275,REGROUPED,"S4,S6,C1",
+2023-24,D,Everyone at district location code 1035,178.92,224,22047300,total_compensation,S-275,REGROUPED,"S9,C1",location column exists from 2022-23 only
+2024-25,B,District administrator titles (11x-13x),10.67,11,2528302,total_compensation,S-275,REGROUPED,"S4,S6,C1",
+2024-25,B2,B plus classified Director/Supervisor (99y),30.61,32,5848806,total_compensation,S-275,REGROUPED,"S4,S6,C1",
+2024-25,D,Everyone at district location code 1035,156.02,199,20420198,total_compensation,S-275,REGROUPED,"S9,C1",location column exists from 2022-23 only
+2025-26,B,District administrator titles (11x-13x),11.77,11,2552462,total_compensation,S-275,REGROUPED,"S4,S6,C1",
+2025-26,B2,B plus classified Director/Supervisor (99y),29.94,31,5937708,total_compensation,S-275,REGROUPED,"S4,S6,C1",
+2025-26,D,Everyone at district location code 1035,155.95,211,20547656,total_compensation,S-275,REGROUPED,"S9,C1",location column exists from 2022-23 only
+2014-15,A,General administration activities 11-15 (spending),,,2497544.11,expenditure,F-196,REGROUPED,"F7,C1",2.56% of general fund
+2015-16,A,General administration activities 11-15 (spending),,,3036675.32,expenditure,F-196,REGROUPED,"F7,C1",2.81% of general fund
+2016-17,A,General administration activities 11-15 (spending),,,3334388.1,expenditure,F-196,REGROUPED,"F7,C1",2.89% of general fund
+2017-18,A,General administration activities 11-15 (spending),,,3936443.24,expenditure,F-196,REGROUPED,"F7,C1",3.19% of general fund
+2018-19,A,General administration activities 11-15 (spending),,,3787670.36,expenditure,F-196,REGROUPED,"F7,C1",2.85% of general fund
+2019-20,A,General administration activities 11-15 (spending),,,4232313.45,expenditure,F-196,REGROUPED,"F7,C1",2.99% of general fund
+2020-21,A,General administration activities 11-15 (spending),,,4163493.1,expenditure,F-196,REGROUPED,"F7,C1",2.93% of general fund
+2021-22,A,General administration activities 11-15 (spending),,,4961628.21,expenditure,F-196,REGROUPED,"F7,C1",3.17% of general fund
+2022-23,A,General administration activities 11-15 (spending),,,5113296.07,expenditure,F-196,REGROUPED,"F7,C1",3.09% of general fund
+2023-24,A,General administration activities 11-15 (spending),,,4555830.34,expenditure,F-196,REGROUPED,"F7,C1",2.75% of general fund
+2024-25,A,General administration activities 11-15 (spending),,,3997213.13,expenditure,F-196,REGROUPED,"F7,C1",2.28% of general fund
+2020-21,C,Community Knox directory match,,99,11333072,total_compensation,community spreadsheet (stated totals),EXTERNAL,"C1,C2","recomputed from listed rows (earlier workbook version, before C6 update) with S-275 pay: $11,431,533 for 95 of 100 listed; rest had no S-275 data or are vacancies"
+2023-24,C,Community Knox directory match,,110,14300783,total_compensation,community spreadsheet (stated totals),EXTERNAL,"C1,C2","recomputed from listed rows (earlier workbook version, before C6 update) with S-275 pay: $14,300,783 for 110 of 114 listed; rest had no S-275 data or are vacancies"
+2025-26,C,Community Knox directory match,,102,14215213,total_compensation,community spreadsheet (stated totals),EXTERNAL,"C1,C2","recomputed from listed rows (earlier workbook version, before C6 update) with S-275 pay: $14,475,281 for 102 of 105 listed; rest had no S-275 data or are vacancies"
+2025-26,district_stated,District's stated central administration share,,,,share_of_budget,Oct. 22 FAQ,EXTERNAL,C3,4.88%; year and base not stated; basis requested
